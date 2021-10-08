@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\StoreAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Notification\NotificationController;
+use App\Models\Addon;
 use App\Models\AddonCategoryItem;
+use App\Models\Order;
+use App\Models\OrderDetails;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -93,4 +97,96 @@ class ProductController extends Controller
 
     }
 
+    /**
+     * added by monika
+     * for save admin walkin order
+     */
+    public function savewalkinOrder(Request $request)
+    {
+        $data = $request->all();
+        $order_unique_id = "ODR-" . time();
+        $store_id = auth()->id();
+        $orderData['store_id'] = $store_id;
+        $orderData['order_unique_id'] = $order_unique_id;
+        $orderData['customer_name'] = $data['customer_name'];
+        $orderData['table_no'] = $data['table_no'];
+        $orderData['customer_phone'] = $data['customer_phone'];
+        $orderData['sub_total'] = $data['sub_total'];
+        $orderData['discount'] = $data['discount'];
+        $orderData['tax'] = (($data['sub_total'] * $data['tax'])/100);
+        $orderData['store_charge'] = $data['store_charge'];
+        $orderData['total'] = $data['total'];
+        $orderData['comments'] = $data['comments'];
+        $orderData['payment_status'] = $data['payment_status'];
+        $orderData['order_type'] = $data['order_type'];
+        $orderData['payment_type'] = $data['payment_type'];
+        
+        $new_order = Order::create($orderData);
+        $new_order['status'] = 1;
+        $notification = new NotificationController();
+
+        if ($new_order) {
+            $order_id = Order::all()->where('order_unique_id', '=', $order_unique_id)->first()['id'];
+            $items = array();
+            if (count($data['store_product']) > 0 && count($data['product_original_price'])) {
+                for($i = 0; $i < count($data['store_product']); $i++){
+                    $temp = [];
+                    $temp['order_id'] = $order_id;
+                    $product = Product::all()->where('id', '=', $data['store_product'][$i])->first();
+                    if ($data['addon'] == '') {
+                        $temp['name'] = $product['name'];
+                        $temp['price'] = $product['price'];
+                    } else {
+                        $addon = Addon::find($data['addon']);
+                        $temp['name'] = $product['name'] . "-" . $addon->addon_name;
+                        $temp['price'] = $addon->price;
+                    }
+                    $temp['quantity'] = $data['product_qty'][$i];
+                    $orderDetail = OrderDetails::create($temp);
+                }
+            }
+
+            // foreach ($orderItems as $value) {
+            //     $temp = [];
+            //     $temp['order_id'] = $order_id;
+            //     $product = Product::all()->where('id', '=', $value['itemId'])->first();
+            //     if ($value['addon'] == null) {
+            //         $temp['name'] = $product['name'];
+            //         $temp['price'] = $product['price'];
+            //     } else {
+            //         $addon = Addon::find($value['addon']);
+            //         $temp['name'] = $product['name'] . "-" . $addon->addon_name;
+            //         $temp['price'] = $addon->price;
+            //     }
+            //     $temp['quantity'] = $value['count'];
+            //     $orderDetail = OrderDetails::create($temp);
+            //     if ($value['extra'] != NULL) {
+            //         $temp = array();
+            //         foreach ($value['extra'] as $value) {
+            //             $addon = Addon::find($value['addon_id']);
+            //             $temp['order_detail_id'] = $orderDetail->id;
+            //             $temp['addon_name'] = $addon->addon_name;
+            //             $temp['addon_price'] = $addon->price;
+            //             $temp['addon_count'] = $value['count'];
+            //             OrderDetailAddon::create($temp);
+            //         }
+            //     }
+            // }
+            $response_data = Order::all()->where('customer_phone', '=', $request->customer_phone);
+
+
+            $response = [];
+            foreach ($response_data as $value)
+                $response[] = $value;
+            $new_order['render_whatsapp_message'] = $notification->WhatsAppOrderNotification(Order::with('orderDetails.OrderDetailsExtraAddon')->where('id', $new_order->id)->get()->toArray());
+            try {
+                $title = "New Order";
+                $body = "New order is placed check here for more details";
+                $notification->send_notification($title, $body, $store_id);
+            } catch (\Exception $e) {
+            }
+            $new_order['render_whatsapp_message'] = str_replace("\n", "%0a", $new_order['render_whatsapp_message']);
+            return Redirect::route("store_admin.orders")->with(Toastr::success('Walkin Order successfully ', 'Success'));
+        }
+    }
 }

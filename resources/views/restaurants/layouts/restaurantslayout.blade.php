@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ Auth::user()->store_name }}</title>
 
     <!-- ================= Favicon ================== -->
@@ -36,7 +36,9 @@
 
     <link rel="stylesheet" href={{asset('new/css/custom_store.css')}} type="text/css">
 
-
+    <!-- added by monika for resolved issue of select2 dropdown -->
+    <script src={{asset("new/vendor/jquery/dist/jquery.min.js")}}></script>
+    <script src={{asset("new/vendor/select2/dist/js/select2.min.js")}}></script>
 
 
 
@@ -137,7 +139,7 @@
 
 
 
-<script src={{asset("new/vendor/jquery/dist/jquery.min.js")}}></script>
+
 <script src={{asset("new/vendor/bootstrap/dist/js/bootstrap.bundle.min.js")}}></script>
 <script src={{asset("new/vendor/js-cookie/js.cookie.js")}}></script>
 <script src={{asset("new/vendor/jquery.scrollbar/jquery.scrollbar.min.js")}}></script>
@@ -150,7 +152,7 @@
 
 
 
-<script src={{asset("new/vendor/select2/dist/js/select2.min.js")}}></script>
+
 <script src={{asset("new/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")}}></script>
 <script src={{asset("new/vendor/nouislider/distribute/nouislider.min.js")}}></script>
 <script src={{asset("new/vendor/quill/dist/quill.min.js")}}></script>
@@ -159,6 +161,7 @@
 <script src={{asset("assets/js/printthis.js")}}></script>
 
 <script src={{asset("new/js/toastr.min.js")}}></script>
+<script src={{asset("new/js/custom.js")}}></script>
 {!! Toastr::message() !!}
 
 
