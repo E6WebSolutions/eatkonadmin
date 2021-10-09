@@ -117,7 +117,13 @@
                                     <span class="mb-0 text-sm  font-weight-bold" style="color: #000000;">{{ Auth::user()->store_name }}</span>
                                 </div>
                             </div>
+                            <div class="dropdown-menu dropdown-menu-right p-0">
+                            <a class="dropdown-item selected" href="{{route('store_admin.settings')}}">My Profile</a>
+                            <a class="dropdown-item" href="{{route('store_admin.logout')}}">Logout</a>
+                            <!-- <a class="dropdown-item" href="javascript:void(0)">Change Password</a> -->
+                        </div>
                         </a>
+                        
                     </li>
                 </ul>
             </div>

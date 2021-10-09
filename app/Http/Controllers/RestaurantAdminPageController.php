@@ -681,4 +681,12 @@ class RestaurantAdminPageController extends Controller
         }
         return $price;
     }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('store.login')->with('success', 'Logout Successfully');
+    }
 }

@@ -344,6 +344,9 @@ Route::prefix('/admin/store/')->as('store_admin.')
         Route::get('addwalkinorder', "RestaurantAdminPageController@addwalkinorder")->name('addwalkinorder');
         Route::post('product_detail', "RestaurantAdminPageController@product_detail")->name('product_detail');
         Route::post('savewalkinOrder', 'StoreAdmin\ProductController@savewalkinOrder')->name('savewalkinOrder');
+
+        
+        Route::get('store_logout', 'RestaurantAdminPageController@logout')->name('logout');
         //end
 
     });
