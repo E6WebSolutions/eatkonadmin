@@ -1,19 +1,21 @@
 @extends("restaurants.layouts.restaurantslayout")
 
 @section("restaurantcontant")
+<style>
+    .custom-alert { color: red;}
+</style>
 
-
-<div class="container-fluid mt--6">
+<div class="container-fluid">
     <div class="card mb-4">
         <!-- Card header -->
         <div class="card-header">
-            <h3 class="mb-0">Add Walkin Order</h3>
+            <h3 class="mb-0">Add Walkin Order </h3>
             @if(session()->has("MSG"))
-            <div class="alert alert-{{session()->get("TYPE")}}">
+            <div class="alert alert-{{session()->get('TYPE')}}">
                 <strong> <a>{{session()->get("MSG")}}</a></strong>
             </div>
             @endif
-            @if($errors->any()) @include('admin.admin_layout.form_error') @endif
+            <!-- @if($errors->any()) @include('admin.admin_layout.form_error') @endif -->
         </div>
         <!-- Card body -->
         <div class="card-body">
@@ -28,23 +30,32 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-control-label" for="example3cols2Input">Table no</label>
-                            <select class="form-control" name="table_no" id="table_no" required>
+                            <select class="form-control @error('table_no') is-invalid @enderror" name="table_no" id="table_no">
                                 @foreach($tables as $tables)
                                 <option value="{{ $tables->id }}">{{ $tables->table_name }}</option>
                                 @endforeach
                             </select>
+                            @error('table_no')
+                            <div class="custom-alert">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-control-label" for="example3cols2Input">Customer Name</label>
-                            <input type="text" name="customer_name" class="form-control" required>
+                            <input type="text" name="customer_name" class="form-control @error('customer_name') is-invalid @enderror" required>
+                            @error('customer_name')
+                            <div class="custom-alert">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-control-label" for="example3cols2Input">Phone number</label>
-                            <input type="text" name="customer_phone" class="form-control" required>
+                            <input type="text" name="customer_phone" class="form-control @error('customer_phone') is-invalid @enderror" required>
+                            @error('customer_phone')
+                            <div class="custom-alert">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -60,29 +71,10 @@
                     <div class="col-md-8">
                         <div class="form-group">
                             <label class="form-control-label" for="exampleFormControlSelect1">Comment</label>
-                            <textarea class="form-control" name="comments" rows="3" required></textarea>
+                            <textarea class="form-control" name="comments" rows="3"></textarea>
                         </div>
                     </div>
                 </div>
-                <!-- <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="form-control-label" for="exampleFormControlSelect3">Temp Store product list</label>
-                            <select class="form-control js-example-data-array" name="temp_store_product" id="temp_store_product" required onchange="getProductPrice(this,'00')">
-
-                            </select>
-                        </div>
-                    </div>
-                    <script>
-                        $(document).ready(function() {
-                            var data = <?php echo $mainProductData; ?>
-                            
-                            $('#temp_store_product').select2({
-                                data: data
-                            });
-                        });
-                    </script>
-                </div> -->
                 <hr>
                 <div class="row">
                     <div class="col-md-12">
@@ -94,7 +86,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-control-label" for="exampleFormControlSelect1">Store product list</label>
-                                <select class="form-control" name="store_product[]" id="store_product" required onchange="getProductPrice(this,'00')">
+                                <select class="form-control select-drop" name="store_product[]" id="store_product" onchange="getProductPrice(this,'00')" required>
                                     <option value="">--select--</option>
                                     @foreach($products as $_products)
                                     <option value="{{ $_products->id }}">{{ $_products->name }}</option>
@@ -223,7 +215,7 @@
             html += '<div class="row ProductConfigSubRow" id="ProductConfigSubRow' + numItems + '">';
             html += '<div class="col-md-4"> ';
             html += '<div class="form-group">';
-            html += '<select class="form-control" name="store_product[]" onchange="getProductPrice(this,' + numItems + ')">';
+            html += '<select class="form-control select-drop" name="store_product[]" onchange="getProductPrice(this,' + numItems + ')" required>';
             html += '<option value="">--select--</option>';
             <?php foreach ($products as $_products) { ?>
                 html += '<option value="<?= $_products->id ?>"><?= $_products->name ?></option>';
@@ -251,11 +243,16 @@
             html += '</div>';
             html += '</div>';
             $('#sub_operation_div' + count).append(html);
+            $('.select-drop').select2();
         }
 
         function RemoveOperationSubDiv(attribute_row_count) {
             $('#ProductConfigSubRow' + attribute_row_count).remove();
             getFinalAmount()
         }
+
+        $(document).ready(function() {
+            $('.select-drop').select2();
+        });
     </script>
     @endsection

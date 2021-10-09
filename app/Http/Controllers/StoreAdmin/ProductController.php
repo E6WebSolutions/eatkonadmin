@@ -12,7 +12,9 @@ use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
+
 
 class ProductController extends Controller
 {
@@ -22,70 +24,71 @@ class ProductController extends Controller
     }
 
 
-    public function addproducts(Request $request){
+    public function addproducts(Request $request)
+    {
         $data = request()->validate([
-            'name'=>'required',
-            'image_url'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'is_active'=>'required',
-            'category_id'=>'required',
-            'is_veg'=>'',
-            'description'=>'',
-            'price'=>'required',
-            'cooking_time'=>'required',
-            'is_recommended'=>'',
+            'name' => 'required',
+            'image_url' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'is_active' => 'required',
+            'category_id' => 'required',
+            'is_veg' => '',
+            'description' => '',
+            'price' => 'required',
+            'cooking_time' => 'required',
+            'is_recommended' => '',
 
-            'store_id'=>''
+            'store_id' => ''
         ]);
         $data['store_id'] = auth()->id();
-        if($request->image_url !=NULL) {
+        if ($request->image_url != NULL) {
             $url = $request->file("image_url")->store('public/stores/product/images/');
-            $data['image_url'] = str_replace("public","storage",$url);
+            $data['image_url'] = str_replace("public", "storage", $url);
         }
         $insert = Product::create($data);
-        if($insert) {
-            if($request->addon_category_id!=NULL){
+        if ($insert) {
+            if ($request->addon_category_id != NULL) {
                 $addon = new AddonCategoryItem();
                 $addon->addon_category_id = $request->addon_category_id;
                 $addon->product_id = $insert->id;
                 $addon->store_id = auth()->id();
                 $addon->save();
             }
-            return Redirect::route( "store_admin.products" )->with(Toastr::success('Product Added successfully ','Success'));
+            return Redirect::route("store_admin.products")->with(Toastr::success('Product Added successfully ', 'Success'));
         }
     }
-    public function edit_products(Request $request,$id){
+    public function edit_products(Request $request, $id)
+    {
         $data = request()->validate([
-            'name'=>'required',
-            'image_url'=>'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'is_active'=>'required',
-            'category_id'=>'required',
-            'is_veg'=>'',
-            'description'=>'',
-            'price'=>'required',
-            'cooking_time'=>'required',
-            'is_recommended'=>'',
+            'name' => 'required',
+            'image_url' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'is_active' => 'required',
+            'category_id' => 'required',
+            'is_veg' => '',
+            'description' => '',
+            'price' => 'required',
+            'cooking_time' => 'required',
+            'is_recommended' => '',
         ]);
-        if($request->image_url !=NULL) {
-            Storage::delete(str_replace("storage","public",Product::find($id)->image_url));
+        if ($request->image_url != NULL) {
+            Storage::delete(str_replace("storage", "public", Product::find($id)->image_url));
             $url = $request->file("image_url")->store('public/stores/category/images/');
-            $data['image_url'] = str_replace("public","storage",$url);
+            $data['image_url'] = str_replace("public", "storage", $url);
         }
 
         $insert = Product::whereId($id)->update($data);
-        if($insert) {
+        if ($insert) {
             if ($request->addon_category_id != NULL) {
-                AddonCategoryItem::where('product_id','=', $id)->delete();
+                AddonCategoryItem::where('product_id', '=', $id)->delete();
                 $addon = new AddonCategoryItem();
                 $addon->addon_category_id = $request->addon_category_id;
                 $addon->product_id = $id;
                 $addon->store_id = auth()->id();
                 $addon->save();
-            }else{
-                AddonCategoryItem::where('product_id','=', $id)->delete();
+            } else {
+                AddonCategoryItem::where('product_id', '=', $id)->delete();
             }
         }
-        return Redirect::route( "store_admin.products" )->with(Toastr::success('Product Updated successfully ','Success'));
-
+        return Redirect::route("store_admin.products")->with(Toastr::success('Product Updated successfully ', 'Success'));
     }
     public function delete_product(Request $request)
     {
@@ -94,7 +97,6 @@ class ProductController extends Controller
             AddonCategoryItem::destroy($request->product_id);
         }
         return back();
-
     }
 
     /**
@@ -103,6 +105,21 @@ class ProductController extends Controller
      */
     public function savewalkinOrder(Request $request)
     {
+        /* validate request params */
+        $request->validate(
+            [
+                'customer_name' => 'required',
+                'customer_phone' => 'required'
+            ],
+            [
+                'customer_name.required' => 'Customer name is Required',
+                'customer_phone.required' => 'Customer phone is Required'
+            ]
+        );
+
+        // echo '<pre>';
+        // print_r($_POST);
+        // die;
         $data = $request->all();
         $order_unique_id = "ODR-" . time();
         $store_id = auth()->id();
@@ -113,14 +130,14 @@ class ProductController extends Controller
         $orderData['customer_phone'] = $data['customer_phone'];
         $orderData['sub_total'] = $data['sub_total'];
         $orderData['discount'] = $data['discount'];
-        $orderData['tax'] = (($data['sub_total'] * $data['tax'])/100);
+        $orderData['tax'] = (($data['sub_total'] * $data['tax']) / 100);
         $orderData['store_charge'] = $data['store_charge'];
         $orderData['total'] = $data['total'];
         $orderData['comments'] = $data['comments'];
         $orderData['payment_status'] = $data['payment_status'];
         $orderData['order_type'] = $data['order_type'];
         $orderData['payment_type'] = $data['payment_type'];
-        
+
         $new_order = Order::create($orderData);
         $new_order['status'] = 1;
         $notification = new NotificationController();
@@ -129,7 +146,7 @@ class ProductController extends Controller
             $order_id = Order::all()->where('order_unique_id', '=', $order_unique_id)->first()['id'];
             $items = array();
             if (count($data['store_product']) > 0 && count($data['product_original_price'])) {
-                for($i = 0; $i < count($data['store_product']); $i++){
+                for ($i = 0; $i < count($data['store_product']); $i++) {
                     $temp = [];
                     $temp['order_id'] = $order_id;
                     $product = Product::all()->where('id', '=', $data['store_product'][$i])->first();
