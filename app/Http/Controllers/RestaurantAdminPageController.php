@@ -652,7 +652,6 @@ class RestaurantAdminPageController extends Controller
         $category = Category::all()->where('store_id', auth()->id());
         $addon_category = AddonCategory::all()->where('store_id', auth()->id());
         $products = Product::all()->SortByDesc('id')->where('store_id', auth()->id());
-        $mainProductData = array();
 
         $tables = Table::all()->where('store_id', auth()->id());
         return view('restaurants.addwalkinorders', [
@@ -663,8 +662,7 @@ class RestaurantAdminPageController extends Controller
             'root_name' => 'Walkin Order',
             'sanboxNumber' => $sanboxNumber,
             'languages' => $transation->languages(),
-            'selected_language' => $transation->selected_language(),
-            'mainProductData' => json_encode($mainProductData)
+            'selected_language' => $transation->selected_language()
         ]);
     }
 
@@ -680,6 +678,47 @@ class RestaurantAdminPageController extends Controller
             $price = $products['price'];
         }
         return $price;
+    }
+
+    public function edit_order(Order $id)
+    {
+        $orderDetails =  Order::with('orderDetails')->where('id', $id->id)->get()->toArray();
+        $account_info = Application::all()->first();
+        if ($orderDetails) {
+            $orderDetails = $orderDetails[0];
+            
+            if ($orderDetails['order_details'] && count($orderDetails['order_details'])> 0) {
+                $finaloderProduct = array();
+                foreach ($orderDetails['order_details'] as $order_details) {
+                    
+                    $orderProduct = Product::where('name', $order_details['name'])->first();
+                    
+                    $order_details['product_id'] = $orderProduct['id'];
+                    $finaloderProduct[] = $order_details;
+                }
+                $orderDetails['order_details'] = $finaloderProduct;
+            }
+        }
+
+        $transation = new TranslationService();
+        $sanboxNumber = Setting::all()->where('key', 'PhoneCode')->first()->value;
+        $category = Category::all()->where('store_id', auth()->id());
+        $addon_category = AddonCategory::all()->where('store_id', auth()->id());
+        $products = Product::all()->SortByDesc('id')->where('store_id', auth()->id());
+
+        $tables = Table::all()->where('store_id', auth()->id());
+        return view('restaurants.addwalkinorders', [
+            'order' => $id,
+            'orderDetails' => $orderDetails,
+            'category' => $category,
+            'products' => $products,
+            'tables' => $tables,
+            'addon_category' => $addon_category,
+            'root_name' => 'Walkin Order',
+            'sanboxNumber' => $sanboxNumber,
+            'languages' => $transation->languages(),
+            'selected_language' => $transation->selected_language()
+        ]);
     }
 
     public function logout(Request $request)
