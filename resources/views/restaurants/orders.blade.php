@@ -1,6 +1,9 @@
 @extends("restaurants.layouts.restaurantslayout")
 
 @section("restaurantcontant")
+    @include('restaurants.notification.expired_notification')
+    @include('restaurants.notification.new_order_notification')
+    @include('restaurants.notification.call_waiter_notification')
 
 <style>
     .float {
@@ -46,15 +49,16 @@
                 <thead class="thead-light">
                     <tr>
                         <th>No</th>
-                        <th>Order ID</th>
+                        <th>Print</th>
+                        <th>{{$selected_language->data['store_tableno'] ?? 'Table No'}}</th>
+                        <th>Action</th>
+                        <th>View Order</th>
                         <th>{{$selected_language->data['store_total'] ?? 'Total'}}</th>
+                        <th>Order ID</th>
                         <th>Payment Type</th>
                         <th>Status</th>
                         <th>Order Type</th>
                         <th>Order Placed At</th>
-                        <th>{{$selected_language->data['store_tableno'] ?? 'Table No'}}</th>
-                        <th>Action</th>
-                        <th>View Order</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,59 +67,17 @@
                     @foreach($orders as $order)
                     <tr>
                         <td>{{ $i++}}</td>
-
-                        <td>{{ $order->order_unique_id }}</td>
-
                         <td>
-                            @include('layouts.render.currency',["amount"=>$order->total])
-                        </td>
-                        <td><span class="badge" style="background-color: #3d027b; color: #ffffff">{{ $order->payment_type }}</span></td>
-
-                        <td>
-                            {{-- @php print_r($order->status) @endphp--}}
-                            @if($order->status == 1)
-                            <span class="badge badge-info"> {{$selected_language->data['store_orderstatus_placed'] ?? 'Order Placed'}}</span>
-                            @endif
-
-                            @if($order->status == 2)
-                            <span class="badge badge-warning"> {{$selected_language->data['store_orderstatus_processing'] ?? 'Processing'}}</span>
-                            @endif
-                            @if($order->status == 5)
-                            <span class="badge badge-default">{{$selected_language->data['store_orderstatus_ready'] ?? 'Ready'}}</span>
-                            @endif
-
-                            @if($order->status == 3)
-                            <span class="badge badge-danger">{{$selected_language->data['store_orderstatus_rejected'] ?? 'Rejected'}}</span>
-                            @endif
-
-                            @if($order->status == 4)
-                            <span class="badge badge-success">{{$selected_language->data['store_orderstatus_ordercompleted'] ?? 'Order Completed'}}</span>
-                            @endif
-
-
-                        </td>
-
-                        <td>
-                            @if($order->order_type == 1)
-                            <span class="badge bg-dark text-yellow">Dining</span>
-                            @endif
-
-                            @if($order->order_type == 2)
-                            <span class="badge bg-dark text-success">Takeaway</span>
-                            @endif
-
-                            @if($order->order_type == 3)
-                            <span class="badge bg-dark text-danger">Delivery</span>
-                            @endif
-                        </td>
-                        <td>
-                            {{$order->created_at->diffForHumans()}}
+                            <a href="javascript:void(0)" onclick="orderPrint('{{$order->id}}')" class="btn btn-sm red-btn-order btn-round btn-icon">
+                                <span class="btn-inner--icon"><i class="fas fa-receipt"></i></span>
+                                <span class="btn-inner--text">Print</span>
+                            </a>
                         </td>
                         <td> <span class="badge badge-primary"> {{$order->table_no}}</span></td>
                         <td>
                             @if($order->status == 1)
-                            <a class="btn btn-primary btn-sm text-white" onclick="document.getElementById('accept_order{{$order->id}}').submit();">{{$selected_language->data['store_orderstatus_acceptorder'] ?? 'Accept Order'}}</a>
-                            <a class="btn btn-danger btn-sm text-white" onclick="document.getElementById('reject_order{{$order->id}}').submit();">{{$selected_language->data['store_orderstatus_rejectorder'] ?? 'Reject Order'}}</a>
+                                <a class="btn btn-primary btn-sm text-white" onclick="document.getElementById('accept_order{{$order->id}}').submit();">{{$selected_language->data['store_orderstatus_acceptorder'] ?? 'Accept Order'}}</a>
+                                <a class="btn btn-danger btn-sm text-white" onclick="document.getElementById('reject_order{{$order->id}}').submit();">{{$selected_language->data['store_orderstatus_rejectorder'] ?? 'Reject Order'}}</a>
                             @endif
 
 
@@ -127,31 +89,23 @@
 
 
                             @if($order->status == 2)
-                            <a class="btn btn-outline-success btn-sm" onclick="document.getElementById('ready_to_serve{{$order->id}}').submit();">{{$selected_language->data['store_orderstatus_readytoserve'] ?? 'Ready to Serve'}}</a>
+                                <a class="btn btn-outline-success btn-sm" onclick="document.getElementById('ready_to_serve{{$order->id}}').submit();">{{$selected_language->data['store_orderstatus_readytoserve'] ?? 'Ready to Serve'}}</a>
                             @endif
                             @if($order->status == 5)
-                            <a class="btn btn-outline-success btn-sm" onclick="document.getElementById('complete_order{{$order->id}}').submit();">{{$selected_language->data['store_orderstatus_complete'] ?? 'Complete'}}</a>
+                                <a class="btn btn-outline-success btn-sm" onclick="document.getElementById('complete_order{{$order->id}}').submit();">{{$selected_language->data['store_orderstatus_complete'] ?? 'Complete'}}</a>
                             @endif
-
-
                             @if($order->status == 3)
-                            <a class="btn btn-danger btn-sm text-white">{{$selected_language->data['store_orderstatus_rejected'] ?? 'Rejected'}}</a>
+                                <a class="btn btn-danger btn-sm text-white">{{$selected_language->data['store_orderstatus_rejected'] ?? 'Rejected'}}</a>
                             @endif
-
                             @if($order->status == 4)
-                            <a class="btn btn-success btn-sm text-white">{{$selected_language->data['order_status_completed'] ?? 'Completed'}}</a>
-                            @if($order->payment_status == 1)
-                            <a class="btn btn-dark btn-sm text-success" onclick="document.getElementById('marks_as_paid{{$order->id}}').submit();"><i class="fas fa-check-circle"></i> Mark As Paid</a>
+                                <a class="btn btn-success btn-sm text-white">{{$selected_language->data['order_status_completed'] ?? 'Completed'}}</a>
+                                @if($order->payment_status == 1)
+                                    <a class="btn btn-dark btn-sm text-success" onclick="document.getElementById('marks_as_paid{{$order->id}}').submit();"><i class="fas fa-check-circle"></i> Mark As Paid</a>
+                                @endif
+                                @if($order->payment_status == 2)
+                                    <a class="btn btn-dark btn-sm text-yellow"><i class="fas fa-check-double"></i> Paid</a>
+                                @endif
                             @endif
-
-                            @if($order->payment_status == 2)
-                            <a class="btn btn-dark btn-sm text-yellow"><i class="fas fa-check-double"></i> Paid</a>
-                            @endif
-
-
-                            @endif
-
-
                             <form style="visibility: hidden" method="post" action="{{route('store_admin.update_payment_status',['id'=>$order->id])}}" id="marks_as_paid{{$order->id}}">
                                 @csrf
                                 @method('patch')
@@ -199,13 +153,55 @@
                                     <input type="hidden" value="{{$order->id}}" name="id">
                                 </form>
                             </span>
-                            <a href="javascript:void(0)" onclick="orderPrint('{{$order->id}}')" class="btn btn-sm red-btn-order btn-round btn-icon">
-                                <span class="btn-inner--icon"><i class="fas fa-receipt"></i></span>
-                                <span class="btn-inner--text">Print Thermal</span>
-                            </a>
+
                         </td>
 
+                        <td>
+                            @include('layouts.render.currency',["amount"=>$order->total])
+                        </td>
+                        <td>{{ $order->order_unique_id }}</td>
+                        <td><span class="badge" style="background-color: #3d027b; color: #ffffff">{{ $order->payment_type }}</span></td>
 
+                        <td>
+                            {{-- @php print_r($order->status) @endphp--}}
+                            @if($order->status == 1)
+                            <span class="badge badge-info"> {{$selected_language->data['store_orderstatus_placed'] ?? 'Order Placed'}}</span>
+                            @endif
+
+                            @if($order->status == 2)
+                            <span class="badge badge-warning"> {{$selected_language->data['store_orderstatus_processing'] ?? 'Processing'}}</span>
+                            @endif
+                            @if($order->status == 5)
+                            <span class="badge badge-default">{{$selected_language->data['store_orderstatus_ready'] ?? 'Ready'}}</span>
+                            @endif
+
+                            @if($order->status == 3)
+                            <span class="badge badge-danger">{{$selected_language->data['store_orderstatus_rejected'] ?? 'Rejected'}}</span>
+                            @endif
+
+                            @if($order->status == 4)
+                            <span class="badge badge-success">{{$selected_language->data['store_orderstatus_ordercompleted'] ?? 'Order Completed'}}</span>
+                            @endif
+
+
+                        </td>
+
+                        <td>
+                            @if($order->order_type == 1)
+                            <span class="badge bg-dark text-yellow">Dining</span>
+                            @endif
+
+                            @if($order->order_type == 2)
+                            <span class="badge bg-dark text-success">Takeaway</span>
+                            @endif
+
+                            @if($order->order_type == 3)
+                            <span class="badge bg-dark text-danger">Delivery</span>
+                            @endif
+                        </td>
+                        <td>
+                            {{$order->created_at->diffForHumans()}}
+                        </td>
                     </tr>
 
 

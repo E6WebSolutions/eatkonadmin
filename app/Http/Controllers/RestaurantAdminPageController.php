@@ -28,8 +28,14 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Route;
 
+/**
+ *
+ */
 class RestaurantAdminPageController extends Controller
 {
+    /**
+     * @param Redirector $redirect
+     */
     public function __construct(Redirector $redirect)
     {
         $this->middleware('auth:store');
@@ -41,6 +47,10 @@ class RestaurantAdminPageController extends Controller
                 ->send();
         }
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
 
@@ -57,20 +67,17 @@ class RestaurantAdminPageController extends Controller
 
         $earnings = Order::all()->where('status', '=', 4)->where('store_id', '=', $store_id)->sum('total');
         $account_info = Application::all()->first();
-        $orders = Order::all()->SortByDesc('id')->where('store_id', auth()->id())->where('status', '=', 1);
-
-
+        $orders = Order::with('orderDetails')->where('store_id', auth()->id())
+            ->where('status', '=', 1)->orderBy('id', 'desc')->get();
 
         $notification = $this->notification();
-
-
 
         return view('restaurants.dashboard', [
             "order_count" => $order_count,
             'call_waiter_count' => $call_waiter_count,
             "item_sold" => $item_sold,
             "earnings" => $earnings,
-            "account_info" =>  $account_info,
+            "account_info" => $account_info,
             'orders' => $orders,
             'notification' => $notification,
             'sanboxNumber' => $sanboxNumber,
@@ -79,6 +86,10 @@ class RestaurantAdminPageController extends Controller
             'selected_language' => $transation->selected_language()
         ]);
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function orderstatus()
     {
         $transation = new TranslationService();
@@ -97,24 +108,37 @@ class RestaurantAdminPageController extends Controller
         ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function orders()
     {
         $sanboxNumber = Setting::all()->where('key', 'PhoneCode')->first()->value;
         $transation = new TranslationService();
         $orders = Order::all()->SortByDesc('id')->where('store_id', auth()->id());
         $orders_count = Order::all()->SortByDesc('id')->where('store_id', auth()->id())->count();
+        $store_id = Auth::user()->id;
+        $order_count = Order::all()->where('store_id', '=', $store_id)->count();
+        $call_waiter_count = WaiterCall::all()->where('store_id', '=', $store_id)->count();
         return view('restaurants.orders', [
             'orders' => $orders,
             'orders_count' => $orders_count,
+            'order_count' => $order_count,
+            'call_waiter_count' => $call_waiter_count,
             'root_name' => 'Orders',
             'sanboxNumber' => $sanboxNumber,
             'languages' => $transation->languages(),
-            'selected_language' => $transation->selected_language()
+            'selected_language' => $transation->selected_language(),
+            'notification' => $this->notification()
 
         ]);
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function order_delete(Request $request)
     {
 
@@ -123,6 +147,9 @@ class RestaurantAdminPageController extends Controller
         return back()->with(Toastr::success('Order Deleted successfully ', 'Success'));
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function new_orders()
     {
 
@@ -142,6 +169,10 @@ class RestaurantAdminPageController extends Controller
             ]
         ], 200);
     }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function new_waiter_calls()
     {
 
@@ -161,10 +192,15 @@ class RestaurantAdminPageController extends Controller
             ]
         ], 200);
     }
+
+    /**
+     * @param Order $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function view_order(Order $id)
     {
         $transation = new TranslationService();
-        $orderDetails =  Order::with('orderDetails.OrderDetailsExtraAddon')->where('id', $id->id)->get()->toArray();
+        $orderDetails = Order::with('orderDetails.OrderDetailsExtraAddon')->where('id', $id->id)->get()->toArray();
         $sanboxNumber = Setting::all()->where('key', 'PhoneCode')->first()->value;
         //        return OrderDetails::with('OrderDetailsExtraAddon')->get();
         //        return $orderDetails;
@@ -179,6 +215,10 @@ class RestaurantAdminPageController extends Controller
             'selected_language' => $transation->selected_language()
         ]);
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function categories()
     {
         $transation = new TranslationService();
@@ -197,6 +237,10 @@ class RestaurantAdminPageController extends Controller
             'selected_language' => $transation->selected_language()
         ]);
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function addcategories()
     {
         $transation = new TranslationService();
@@ -208,6 +252,11 @@ class RestaurantAdminPageController extends Controller
             'selected_language' => $transation->selected_language()
         ]);
     }
+
+    /**
+     * @param Category $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function update_category(Category $id)
     {
         $sanboxNumber = Setting::all()->where('key', 'PhoneCode')->first()->value;
@@ -227,15 +276,18 @@ class RestaurantAdminPageController extends Controller
         );
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function products()
     {
         $transation = new TranslationService();
         $sanboxNumber = Setting::all()->where('key', 'PhoneCode')->first()->value;
         $products_count = Product::all()->where('store_id', auth()->id())->count();
-        $products = Product::all()->SortByDesc('id')->where('store_id', auth()->id());
-        $productsnonveg = Product::all()->SortByDesc('id')->where('store_id', auth()->id())->where('is_veg', '=', 0);
-        $productsveg = Product::all()->SortByDesc('id')->where('store_id', auth()->id())->where('is_veg', '=', 1);
-        $productsdisabled = Product::all()->SortByDesc('id')->where('store_id', auth()->id())->where('is_active', '=', 0);
+        $products = Product::all()->SortBy('name')->where('store_id', auth()->id());
+        $productsnonveg = Product::all()->SortBy('name')->where('store_id', auth()->id())->where('is_veg', '=', 0);
+        $productsveg = Product::all()->SortBy('name')->where('store_id', auth()->id())->where('is_veg', '=', 1);
+        $productsdisabled = Product::all()->SortBy('name')->where('store_id', auth()->id())->where('is_active', '=', 0);
         return view('restaurants.products', [
             'products' => $products,
             'products_count' => $products_count,
@@ -250,6 +302,9 @@ class RestaurantAdminPageController extends Controller
         ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function addproducts()
     {
         $transation = new TranslationService();
@@ -266,6 +321,10 @@ class RestaurantAdminPageController extends Controller
         ]);
     }
 
+    /**
+     * @param Product $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function update_products(Product $id)
     {
         $transation = new TranslationService();
@@ -292,6 +351,9 @@ class RestaurantAdminPageController extends Controller
     }
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function addon_categories()
     {
         $transation = new TranslationService();
@@ -308,6 +370,10 @@ class RestaurantAdminPageController extends Controller
         ]);
     }
 
+    /**
+     * @param AddonCategory $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function addon_categories_edit(AddonCategory $id)
     {
         $sanboxNumber = Setting::all()->where('key', 'PhoneCode')->first()->value;
@@ -329,6 +395,9 @@ class RestaurantAdminPageController extends Controller
     }
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function addon()
     {
         $transation = new TranslationService();
@@ -346,6 +415,11 @@ class RestaurantAdminPageController extends Controller
             'selected_language' => $transation->selected_language()
         ]);
     }
+
+    /**
+     * @param Addon $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function update_addon(Addon $id)
     {
         $transation = new TranslationService();
@@ -365,6 +439,9 @@ class RestaurantAdminPageController extends Controller
     }
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function tables()
     {
         $transation = new TranslationService();
@@ -379,6 +456,10 @@ class RestaurantAdminPageController extends Controller
             'selected_language' => $transation->selected_language()
         ]);
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function table_report()
     {
         $transation = new TranslationService();
@@ -393,6 +474,10 @@ class RestaurantAdminPageController extends Controller
             'selected_language' => $transation->selected_language()
         ]);
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function add_table()
     {
         $transation = new TranslationService();
@@ -409,6 +494,10 @@ class RestaurantAdminPageController extends Controller
     }
 
 
+    /**
+     * @param Table $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit_table(Table $id)
     {
         $transation = new TranslationService();
@@ -425,6 +514,9 @@ class RestaurantAdminPageController extends Controller
     }
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function banner()
     {
         $transation = new TranslationService();
@@ -440,6 +532,10 @@ class RestaurantAdminPageController extends Controller
         ]);
     }
 
+    /**
+     * @param StoreSlider $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function banneredit(StoreSlider $id)
     {
         $transation = new TranslationService();
@@ -456,8 +552,9 @@ class RestaurantAdminPageController extends Controller
     }
 
 
-
-
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function addbanner()
     {
         $transation = new TranslationService();
@@ -471,6 +568,9 @@ class RestaurantAdminPageController extends Controller
         ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function subscription_plans()
     {
         $transation = new TranslationService();
@@ -478,13 +578,13 @@ class RestaurantAdminPageController extends Controller
         $sanboxNumber = Setting::all()->where('key', 'PhoneCode')->first()->value;
         $subscription = StoreSubscription::all()->where('is_active', '=', 1)->where('price', '!=', 0);
         $subscription_count = StoreSubscription::all()->where('is_active', '=', 1)->where('price', '!=', 0)->count();
-        $isStripeEnabled =  Setting::all()->where('key', '=', 'IsStripePaymentEnabled')->first()->value;
+        $isStripeEnabled = Setting::all()->where('key', '=', 'IsStripePaymentEnabled')->first()->value;
 
         $razorpay_key_id = Setting::all()->where('key', '=', 'RazorpayKeyId')->first()->value;
-        $razorpayEnabled =  Setting::all()->where('key', '=', 'IsRazorpayPaymentEnabled')->first()->value;
+        $razorpayEnabled = Setting::all()->where('key', '=', 'IsRazorpayPaymentEnabled')->first()->value;
 
         $paypalMode = Setting::all()->where('key', '=', 'PaypalMode')->first()->value;
-        $paypalKeyId =  Setting::all()->where('key', '=', 'PaypalKeyId')->first()->value;
+        $paypalKeyId = Setting::all()->where('key', '=', 'PaypalKeyId')->first()->value;
         $isPaypalEnabled = Setting::all()->where('key', '=', 'IsPaypalPaymentEnabled')->first()->value;
 
 
@@ -499,7 +599,7 @@ class RestaurantAdminPageController extends Controller
             'isStripeEnabled' => $isStripeEnabled,
             'root_name' => 'Subscription',
             'sanboxNumber' => $sanboxNumber,
-            'razorpayEnabled' =>  $razorpayEnabled,
+            'razorpayEnabled' => $razorpayEnabled,
             'razorpay_key_id' => $razorpay_key_id,
             'currency' => $currency,
             'logo' => $logo,
@@ -511,6 +611,10 @@ class RestaurantAdminPageController extends Controller
 
         ]);
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function subscription_history()
     {
         $transation = new TranslationService();
@@ -525,14 +629,15 @@ class RestaurantAdminPageController extends Controller
         ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function settings()
     {
         $transation = new TranslationService();
         $store = Auth::user();
         $sanboxNumber = Setting::all()->where('key', 'PhoneCode')->first()->value;
         $store_settings = StoreSetting::all()->where('store_id', \auth()->id())->first();
-
-
 
 
         return view('restaurants.settings.index', [
@@ -547,6 +652,9 @@ class RestaurantAdminPageController extends Controller
         ]);
     }
 
+    /**
+     * @return array
+     */
     public function notification()
     {
         $transation = new TranslationService();
@@ -559,7 +667,12 @@ class RestaurantAdminPageController extends Controller
         }
         return $notification;
     }
+
     // customers
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function customers()
     {
         $transation = new TranslationService();
@@ -575,6 +688,10 @@ class RestaurantAdminPageController extends Controller
             'selected_language' => $transation->selected_language()
         ]);
     }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function waiter_calls()
     {
         $transation = new TranslationService();
@@ -594,6 +711,9 @@ class RestaurantAdminPageController extends Controller
     }
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function store_expense()
     {
         $transation = new TranslationService();
@@ -611,6 +731,9 @@ class RestaurantAdminPageController extends Controller
     }
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function coupons()
     {
         $transation = new TranslationService();
@@ -628,6 +751,9 @@ class RestaurantAdminPageController extends Controller
     }
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function add_coupons()
     {
         $transation = new TranslationService();
@@ -668,6 +794,10 @@ class RestaurantAdminPageController extends Controller
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return mixed|string
+     */
     public function product_detail(Request $request)
     {
         $price = '0';
@@ -682,6 +812,10 @@ class RestaurantAdminPageController extends Controller
         return $price;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout(Request $request)
     {
         Auth::logout();

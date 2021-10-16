@@ -111,7 +111,7 @@
                         <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <div class="media align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
-                    <img alt="Image placeholder" src={{asset("assets/images/avatar/1.jpg")}}>
+                    <img alt="Image placeholder" src={{asset(Auth::user()->logo_url)}}>
                   </span>
                                 <div class="media-body ml-2 d-none d-lg-block">
                                     <span class="mb-0 text-sm  font-weight-bold" style="color: #000000;">{{ Auth::user()->store_name }}</span>
@@ -123,7 +123,7 @@
                             <!-- <a class="dropdown-item" href="javascript:void(0)">Change Password</a> -->
                         </div>
                         </a>
-                        
+
                     </li>
                 </ul>
             </div>

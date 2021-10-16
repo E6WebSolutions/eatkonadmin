@@ -211,7 +211,7 @@ Route::get('/restaurants/vieworder', function () {
     return view('restaurants.vieworder');
 });
 
-
+Route::get('/copystore', 'API\StoreController@copystore');
 Route::prefix('store/auth')
     ->as('store.')
     ->group(function () {
@@ -345,7 +345,7 @@ Route::prefix('/admin/store/')->as('store_admin.')
         Route::post('product_detail', "RestaurantAdminPageController@product_detail")->name('product_detail');
         Route::post('savewalkinOrder', 'StoreAdmin\ProductController@savewalkinOrder')->name('savewalkinOrder');
 
-        
+
         Route::get('store_logout', 'RestaurantAdminPageController@logout')->name('logout');
         //end
 

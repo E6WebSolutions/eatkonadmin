@@ -18,7 +18,7 @@
         <!-- Brand -->
         <div class="sidenav-header d-flex align-items-center">
             <a class="navbar-brand" >
-                <h2 class="text-white">{{ __('chef.adminpanel') }}
+                <h2 class="text-white">{{ !empty($account_info)?$account_info->application_name:'Admin Panel' }}
                 </h2>
             </a>
             <div class="ml-auto">

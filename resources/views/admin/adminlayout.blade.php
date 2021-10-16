@@ -86,13 +86,13 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav align-items-center ml-auto ml-md-0">
-                    <li>  <span class="badge badge-pill" style="background-color: #0c6007;color: white"><b>v6.1</b></span></li>
+                    <li>  <span class="badge badge-pill" style="background-color: #0c6007;color: white"><b>v{{env('APP_VERSION')}}</b></span></li>
 
                     <li class="nav-item dropdown">
                         <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <div class="media align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
-                    <img alt="Image placeholder" src={{asset("assets/images/avatar/1.jpg")}}>
+                    <img alt="Image placeholder" src={{asset(!empty($account_info)? $account_info->application_logo:'assets_home/images/logo/logo.png')}}>
                   </span>
                                 <div class="media-body ml-2 d-none d-lg-block">
                                     <span class="mb-0 text-sm text-dark font-weight-bold">Admin</span>

@@ -20,7 +20,7 @@
 
                         <p class="text-muted text-center"> <strong>Simply open your phone's camera and point it at the code.<br>
                             Tap on the link that appears.</strong><br><br><br>
-                            Powerd by:<br>
+                            Powered by:<br>
                             <img src="{{asset($account_info !=NULL ? $account_info->application_logo:'assets_home/images/logo/logo.png')}}" alt="logo" width="292px" height="69px;"><br>
                         </p>
 
