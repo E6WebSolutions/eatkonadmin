@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ Auth::user()->store_name }}</title>
 
     <!-- ================= Favicon ================== -->
@@ -35,8 +35,13 @@
     <link rel="stylesheet" type="text/css" href={{asset('new/icofont/icofont.min.css')}}>
 
     <link rel="stylesheet" href={{asset('new/css/custom_store.css')}} type="text/css">
+    <script>
+        const base_path = '{{ url('/') }}\/';
+    </script>
 
-
+    <!-- added by monika for resolved issue of select2 dropdown -->
+    <script src={{asset("new/vendor/jquery/dist/jquery.min.js")}}></script>
+    <script src={{asset("new/vendor/select2/dist/js/select2.min.js")}}></script>
 
 
 
@@ -109,13 +114,19 @@
                         <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <div class="media align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
-                    <img alt="Image placeholder" src={{asset("assets/images/avatar/1.jpg")}}>
+                    <img alt="Image placeholder" src={{asset(Auth::user()->logo_url)}}>
                   </span>
                                 <div class="media-body ml-2 d-none d-lg-block">
                                     <span class="mb-0 text-sm  font-weight-bold" style="color: #000000;">{{ Auth::user()->store_name }}</span>
                                 </div>
                             </div>
+                            <div class="dropdown-menu dropdown-menu-right p-0">
+                            <a class="dropdown-item selected" href="{{route('store_admin.settings')}}">My Profile</a>
+                            <a class="dropdown-item" href="{{route('store_admin.logout')}}">Logout</a>
+                            <!-- <a class="dropdown-item" href="javascript:void(0)">Change Password</a> -->
+                        </div>
                         </a>
+
                     </li>
                 </ul>
             </div>
@@ -137,7 +148,7 @@
 
 
 
-<script src={{asset("new/vendor/jquery/dist/jquery.min.js")}}></script>
+
 <script src={{asset("new/vendor/bootstrap/dist/js/bootstrap.bundle.min.js")}}></script>
 <script src={{asset("new/vendor/js-cookie/js.cookie.js")}}></script>
 <script src={{asset("new/vendor/jquery.scrollbar/jquery.scrollbar.min.js")}}></script>
@@ -150,7 +161,7 @@
 
 
 
-<script src={{asset("new/vendor/select2/dist/js/select2.min.js")}}></script>
+
 <script src={{asset("new/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js")}}></script>
 <script src={{asset("new/vendor/nouislider/distribute/nouislider.min.js")}}></script>
 <script src={{asset("new/vendor/quill/dist/quill.min.js")}}></script>
@@ -159,6 +170,7 @@
 <script src={{asset("assets/js/printthis.js")}}></script>
 
 <script src={{asset("new/js/toastr.min.js")}}></script>
+<script src={{asset("new/js/custom.js")}}></script>
 {!! Toastr::message() !!}
 
 

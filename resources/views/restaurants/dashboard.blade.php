@@ -7,7 +7,7 @@
     <div class="container-fluid">
 
         <div class="row">
-            <div class="col-12 col-md-9" style="background-color: #eaeef7; border-radius: 25px">
+            <div class="col-12 col-md-12" style="background-color: #eaeef7; border-radius: 25px">
 
                 <div class="tab-pane fade show active" id="home2" role="tabpanel" aria-labelledby="home-tab">
                     <h3 class="p-3">{{$selected_language->data['store_pending_orders'] ?? 'Pending Orders'}}</h3>
@@ -19,7 +19,7 @@
                         @php $i=1 @endphp
                         @foreach($orders as $pending)
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
 
                                 <div class="card">
                                     <!-- Card body -->
@@ -31,21 +31,34 @@
 
                                         </div>
                                         <div>
-                <span class="h6 surtitle text-muted">
-               {{$selected_language->data['store_orderid'] ?? 'Order Id'}}
-                </span>
-                                            <div class="h4">{{ $pending->order_unique_id }}</div>
+                                            <span class="h6 surtitle text-muted">
+                                             {{$selected_language->data['store_tableno'] ?? 'Table No'}}
+                                            </span>
+                                            <div class="h4">{{ $pending->table_no }}</div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col">
 
                 <span class="h6 surtitle text-muted">
-                 {{$selected_language->data['store_tableno'] ?? 'Table No'}}
+                {{$selected_language->data['store_total'] ?? 'Items'}}
                 </span>
-                                                <div class="h4">{{ $pending->table_no }}</div>
+                                                <div class="h4">
+                                                    @foreach($pending->orderDetails as $key => $details)
+                                                        {{$key+1}})  {{$details->name}}<br>
+                                                    @endforeach
+                                                </div>
 
                                             </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                <span class="h6 surtitle text-muted">
+               {{$selected_language->data['store_orderid'] ?? 'Order Id'}}
+                </span>
+                                                <div class="h4">{{ $pending->order_unique_id }}</div>
+                                            </div>
+
+
                                             <div class="col">
 
                 <span class="h6 surtitle text-muted">
@@ -109,7 +122,7 @@
 
 
             </div>
-            <div class="col-12 col-md-3">
+            {{--<div class="col-12 col-md-3">
                 <p id="item-to-copy" hidden> {{route('view_store',[Auth::user()->view_id])}}</p>
                 <div class="row">
                     <div class="col">
@@ -211,7 +224,7 @@
                 </div>
 
 
-            </div>
+            </div>--}}
         </div>
 
 

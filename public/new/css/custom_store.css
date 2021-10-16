@@ -400,6 +400,10 @@
 .expense-bg-color{
     color: #7D3C98;
 }
+.select2-container .select2-selection--single{
+    height:auto ! important;
+    border: 1px solid #dee2e6;
+}
 
 
 

@@ -39,7 +39,7 @@
 <script>
     $(function() {
         let notification = document.createElement('audio');
-        let notificationFileRoute = '{{asset('notification/3.mp3')}}';
+        let notificationFileRoute = '{{asset('notification/test.mp3')}}';
         notification.setAttribute('src', notificationFileRoute);
         notification.setAttribute('type', 'audio/mp3');
         // notification.setAttribute('muted', 'muted');

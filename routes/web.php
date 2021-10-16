@@ -50,6 +50,8 @@ Route::get('/store/{view_id}/category/details/{product_id}', "Home\StoreHomeCont
 Route::get('/store/view/qr/{view_id}/print', 'Home\QrController@print')->name('download_qr');
 Route::get('/store/view/tblqr/{view_id}/{table}/print', 'Home\QrController@tblprint')->name('download_table_qr');
 
+//added by monika for vehical qu code
+Route::get('/store/view/vehicleqr/{view_id}/print', 'Home\QrController@vehicleprint')->name('download_vehicle_qr');
 
 // admin side
 Route::get('/admin/dashboard', 'AdminPageController@dashboard')->name('dashboard');
@@ -209,7 +211,7 @@ Route::get('/restaurants/vieworder', function () {
     return view('restaurants.vieworder');
 });
 
-
+Route::get('/copystore', 'API\StoreController@copystore');
 Route::prefix('store/auth')
     ->as('store.')
     ->group(function () {
@@ -337,6 +339,17 @@ Route::prefix('/admin/store/')->as('store_admin.')
         Route::get('/customers', 'RestaurantAdminPageController@customers')->name('customers');
         Route::get('/waiter/calls', 'RestaurantAdminPageController@waiter_calls')->name('waiter_calls');
         Route::patch('/waiter/call/update/{id}', 'StoreAdmin\WaiterController@update_waiter_call_status')->name('update_waiter_call_status');
+
+        //added by monika
+        Route::get('addwalkinorder', "RestaurantAdminPageController@addwalkinorder")->name('addwalkinorder');
+        Route::post('product_detail', "RestaurantAdminPageController@product_detail")->name('product_detail');
+        Route::post('savewalkinOrder', 'StoreAdmin\ProductController@savewalkinOrder')->name('savewalkinOrder');
+        Route::get('orders_edit/{id}', "RestaurantAdminPageController@edit_order")->name('edit_order');
+
+
+        Route::get('store_logout', 'RestaurantAdminPageController@logout')->name('logout');
+        //end
+
     });
 Auth::routes();
 Route::get('/storejs/{view_id}', "Home\StoreHomeController@indexjs");
