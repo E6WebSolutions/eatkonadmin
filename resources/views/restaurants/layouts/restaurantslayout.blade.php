@@ -35,6 +35,9 @@
     <link rel="stylesheet" type="text/css" href={{asset('new/icofont/icofont.min.css')}}>
 
     <link rel="stylesheet" href={{asset('new/css/custom_store.css')}} type="text/css">
+    <script>
+        const base_path = '{{ url('/') }}\/';
+    </script>
 
     <!-- added by monika for resolved issue of select2 dropdown -->
     <script src={{asset("new/vendor/jquery/dist/jquery.min.js")}}></script>

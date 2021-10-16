@@ -120,7 +120,9 @@ class ProductController extends Controller
         // echo '<pre>';
         // print_r($_POST);
         // die;
+
         $data = $request->all();
+        $edit_order_id = $data['order_id'];
         $order_unique_id = "ODR-" . time();
         $store_id = auth()->id();
         $orderData['store_id'] = $store_id;
@@ -130,7 +132,7 @@ class ProductController extends Controller
         $orderData['customer_phone'] = $data['customer_phone'];
         $orderData['sub_total'] = $data['sub_total'];
         $orderData['discount'] = $data['discount'];
-        $orderData['tax'] = (($data['sub_total'] * $data['tax']) / 100);
+        $orderData['tax'] = $data['tax'];
         $orderData['store_charge'] = $data['store_charge'];
         $orderData['total'] = $data['total'];
         $orderData['comments'] = $data['comments'];
@@ -138,11 +140,19 @@ class ProductController extends Controller
         $orderData['order_type'] = $data['order_type'];
         $orderData['payment_type'] = $data['payment_type'];
 
-        $new_order = Order::create($orderData);
+        if ($edit_order_id != '' && $edit_order_id > 0) {
+            $update = Order::whereId($edit_order_id)->update($orderData);
+            $new_order = Order::whereId($edit_order_id)->first();
+        } else {
+            $new_order = Order::create($orderData);
+        }
         $new_order['status'] = 1;
         $notification = new NotificationController();
 
         if ($new_order) {
+            if ($edit_order_id != '' && $edit_order_id > 0) {
+                OrderDetails::where('order_id', '=', $edit_order_id)->delete();
+            }
             $order_id = Order::all()->where('order_unique_id', '=', $order_unique_id)->first()['id'];
             $items = array();
             if (count($data['store_product']) > 0 && count($data['product_original_price'])) {

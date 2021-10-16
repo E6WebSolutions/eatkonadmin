@@ -139,6 +139,9 @@
 
                         <td style="text-align: center">
                             <span>
+                                <a class="btn btn-default btn-sm" href="{{route('store_admin.edit_order',$order->id)}}">
+                                    <i class="icofont-edit"></i>
+                                </a>
                                 <a class="btn btn-default btn-sm" href="{{route('store_admin.view_order',$order->id)}}">
                                     <i class="icofont-eye-alt"></i>
                                 </a>
