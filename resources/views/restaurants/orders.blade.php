@@ -145,16 +145,16 @@
                                 <a class="btn btn-default btn-sm" href="{{route('store_admin.view_order',$order->id)}}">
                                     <i class="icofont-eye-alt"></i>
                                 </a>
-
+{{--
                                 <a class="btn btn-danger btn-sm text-white" onclick="if(confirm('Are you sure you want to delete this Order ?')){ event.preventDefault();document.getElementById('delete-form-{{$order->id}}').submit(); }">
                                     <i class="icofont-delete-alt"></i>
-                                </a>
+                                </a>--}}
 
-                                <form method="post" action="{{route('store_admin.order_delete')}}" id="delete-form-{{$order->id}}" style="display: none">
+                              {{--  <form method="post" action="{{route('store_admin.order_delete')}}" id="delete-form-{{$order->id}}" style="display: none">
                                     @csrf
                                     @method('DELETE')
                                     <input type="hidden" value="{{$order->id}}" name="id">
-                                </form>
+                                </form>--}}
                             </span>
 
                         </td>
