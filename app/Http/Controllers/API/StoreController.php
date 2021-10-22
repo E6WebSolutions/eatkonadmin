@@ -22,7 +22,7 @@ class StoreController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api');
+//        $this->middleware('auth:api');
     }
 
     /**
@@ -173,7 +173,7 @@ class StoreController extends Controller
         ], 200);
     }
 
-    public function copystore()
+    public function copystore($newStoreId)
     {
 //        dd("here");
         $originalStoreId = 3;
@@ -182,7 +182,7 @@ class StoreController extends Controller
         foreach ($store->tables as $table) {
             $newTable = new Table();
             $newTable->table_name = $table->table_name;
-            $newTable->store_id = 5;
+            $newTable->store_id = $newStoreId;
             $newTable->is_active = 1;
             $newTable->created_at = "2021-09-07 01:56:00";
             $newTable->updated_at = "2021-09-07 08:35:22";
@@ -193,7 +193,7 @@ class StoreController extends Controller
             $newCategory = new Category();
             $newCategory->name = $category->name;
             $newCategory->image_url = $category->image_url;
-            $newCategory->store_id = 5;
+            $newCategory->store_id = $newStoreId;
             $newCategory->is_active = 1;
             $newCategory->created_at = "2021-09-07 01:56:00";
             $newCategory->updated_at = "2021-09-07 08:35:22";
@@ -203,7 +203,7 @@ class StoreController extends Controller
                 $newProduct = new Product();
                 $newProduct->name = $product->name;
                 $newProduct->category_id = $newCategory->id;
-                $newProduct->store_id = 5;
+                $newProduct->store_id = $newStoreId;
                 $newProduct->is_veg = $product->is_veg;
                 $newProduct->is_active = 1;
                 $newProduct->description = $product->description;
