@@ -92,10 +92,10 @@ class ProductController extends Controller
     }
     public function delete_product(Request $request)
     {
-        if (Storage::delete(str_replace("storage", "public", Product::find($request->id)->image_url))) {
+        //if (Storage::delete(str_replace("storage", "public", Product::find($request->id)->image_url))) {
             Product::destroy($request->id);
             AddonCategoryItem::destroy($request->product_id);
-        }
+        //}
         return back();
     }
 

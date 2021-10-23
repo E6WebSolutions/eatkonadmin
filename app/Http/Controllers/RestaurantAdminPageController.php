@@ -225,7 +225,7 @@ class RestaurantAdminPageController extends Controller
         $category_count = Category::all()->where('store_id', auth()->id())->count();
         $sanboxNumber = Setting::all()->where('key', 'PhoneCode')->first()->value;
 
-        $category = Category::withCount('productinfos')->where('store_id', auth()->id())->get();
+        $category = Category::withCount('productinfos')->where('store_id', auth()->id())->orderBy('name')->get();
         return view('restaurants.category', [
             'title' => 'category',
             'root_name' => 'category',
@@ -270,7 +270,8 @@ class RestaurantAdminPageController extends Controller
                 'data' => $id,
                 'sanboxNumber' => $sanboxNumber,
                 'languages' => $transation->languages(),
-                'selected_language' => $transation->selected_language()
+                'selected_language' => $transation->selected_language(),
+                'products'=>Product::where('category_id',$id->id)->orderBy('name')->get()
 
             ]
         );
@@ -309,7 +310,7 @@ class RestaurantAdminPageController extends Controller
     {
         $transation = new TranslationService();
         $sanboxNumber = Setting::all()->where('key', 'PhoneCode')->first()->value;
-        $category = Category::all()->where('store_id', auth()->id());
+        $category = Category::where('store_id', auth()->id())->orderBy('name')->get();
         $addon_category = AddonCategory::all()->where('store_id', auth()->id());
         return view('restaurants.addproducts', [
             'category' => $category,
@@ -330,7 +331,7 @@ class RestaurantAdminPageController extends Controller
         $transation = new TranslationService();
         $sanboxNumber = Setting::all()->where('key', 'PhoneCode')->first()->value;
         $addon_category = AddonCategory::all()->where('store_id', auth()->id());
-        $category = Category::all()->where('store_id', auth()->id());
+        $category = Category::where('store_id', auth()->id())->orderBy('name')->get();
         $addon_category_items = AddonCategoryItem::all()->where('product_id', '=', $id->id);
 
         return view(
