@@ -50,8 +50,10 @@ Route::get('/store/{view_id}/category/details/{product_id}', "Home\StoreHomeCont
 Route::get('/store/view/qr/{view_id}/print', 'Home\QrController@print')->name('download_qr');
 Route::get('/store/view/tblqr/{view_id}/{table}/print', 'Home\QrController@tblprint')->name('download_table_qr');
 
-//added by monika for vehical qu code
+//added by monika for vehicle qu code
 Route::get('/store/view/vehicleqr/{view_id}/print', 'Home\QrController@vehicleprint')->name('download_vehicle_qr');
+Route::get('/store/{view_id}?vehicle', "Home\StoreHomeController@index")->name('view_store_vehicle');
+Route::match(['get', 'post'], '/store-data', 'Home\StoreHomeController@searchResult')->name('store.data');
 
 // admin side
 Route::get('/admin/dashboard', 'AdminPageController@dashboard')->name('dashboard');

@@ -12,11 +12,11 @@
             <div class="col-xs-4 col-sm-6 col-md-5 col-lg-4 col-xl-3">
                 <div class="card shadow-lg">
                     <div class="card-header card-header-divider text-center pt-4"> <h1>{{$data->store_name}}</h1><br>
-                       {!! QrCode::size(250)->generate(route('view_store',['view_id'=>$data->view_id])); !!}</div>
+                       {!! QrCode::size(250)->generate(route('view_store_vehicle',['view_id'=>$data->view_id])); !!}</div>
                     <div class="card-body px-0">
                         <p class="text-center"><strong>Get our MENU on your PHONE</strong></p>
 
-                        <h4 class="text-center"><strong>Vehicle:</strong></h4>
+                        <h4 class="text-center"><strong>Vehicle</strong></h4>
 
                         <p class="text-muted text-center"> <strong>Simply open your phone's camera and point it at the code.<br>
                             Tap on the link that appears.</strong><br><br><br>

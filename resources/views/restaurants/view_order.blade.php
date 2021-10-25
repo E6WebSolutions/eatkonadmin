@@ -249,6 +249,9 @@
                                 <li>
                                     Subtotal<span>@include('layouts.render.currency',["amount"=>$order->sub_total])</span>
                                 </li>
+                                <li>
+                                    Discount<span> - @include('layouts.render.currency',["amount"=>$order->discount])</span>
+                                </li>
                                 <li>{{$selected_language->data['menu_service_charge'] ?? 'Service Charge'}}
                                     <span>@include('layouts.render.currency',["amount"=>$order->store_charge])</span>
                                 </li>
@@ -344,6 +347,7 @@
                             <div class="clearfix px-3" style="width: 300px;">
 
                                 Subtotal<span class="float-right">@include('layouts.render.currency',["amount"=>$order->sub_total])</span><br>
+                                Discount<span class="float-right">- @include('layouts.render.currency',["amount"=>$order->discount])</span><br>
 
                                 {{$selected_language->data['menu_service_charge'] ?? 'Service Charge'}}
                                 <span class="float-right">@include('layouts.render.currency',["amount"=>$order->store_charge])</span><br>

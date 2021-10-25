@@ -108,6 +108,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a  class="nav-link" href="{{route('download_vehicle_qr',[Auth::user()->view_id])}}">
+                            <i class="fas fa-qrcode text-green"></i>
+                            <span class="nav-link-text">{{$selected_language->data['store_printqr'] ?? 'Print Vehicle Qr-Code'}}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a  class="nav-link" href="{{route('store_admin.subscription_plans')}}">
                             <i class="icofont-paper text-flat-darker" style="font-size: 1.1rem"></i>
                             <span class="nav-link-text">{{$selected_language->data['store_subscription_plans'] ?? 'Subscription Plans'}}</span>

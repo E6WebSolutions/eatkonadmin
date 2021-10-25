@@ -63,7 +63,7 @@ class OrderController extends Controller
                 }
             }
 
-
+            $new_order['orderDetail'] = OrderDetails::where('order_id', '=', $order_id)->get();
             $response_data = Order::all()->where('customer_phone', '=', $request->customer_phone);
 
 
