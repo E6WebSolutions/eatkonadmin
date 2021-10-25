@@ -67,72 +67,67 @@
         </div>
 
 
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+                <div class="row">
+                    <div class="col-6">
+                        <h3 class="mb-0"> Products (Total: {{count($products)}})
 
 
-{{--        --}}
+                        </h3>
+                    </div>
 
-{{--        <div class="row">--}}
-{{--        <div class="col-lg-12">--}}
-{{--            <div class="card alert">--}}
-{{--                <div class="card-header">--}}
-{{--                    <h4>Edit Category</h4>--}}
-{{--                    @if(session()->has("MSG"))--}}
-{{--                        <div class="alert alert-{{session()->get("TYPE")}}">--}}
-{{--                            <strong> <a>{{session()->get("MSG")}}</a></strong>--}}
-{{--                        </div>--}}
-{{--                    @endif--}}
-{{--                    @if($errors->any()) @include('admin.admin_layout.form_error') @endif--}}
+                </div>
+            </div>
+            <!-- Light table -->
+            <div class="table-responsive">
+                <table class="table table-flush" id="datatable-basic">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>No</th>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Action</th>
 
-{{--                </div>--}}
-{{--                <div class="card-body">--}}
-{{--                    <div class="menu-upload-form">--}}
-{{--                        <form class="form-horizontal" method="post" action="{{route('store_admin.edit_category',['id'=>$data->id])}}" enctype="multipart/form-data">--}}
-{{--                            {{csrf_field()}}--}}
-{{--                            @method('PATCH')--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label class="col-sm-2 control-label">Photo</label>--}}
-{{--                                <div class="col-sm-10">--}}
-{{--                                    <div class="form-control file-input dark-browse-input-box">--}}
+                    </tr>
+                    </thead>
+                    <tbody>
 
-{{--                                        <input name="image_url"  class="file-name input-flat ui-autocomplete-input" type="file" readonly="readonly" placeholder="Browses photo" autocomplete="off">--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label class="col-sm-2 control-label">Category Name</label>--}}
-{{--                                <div class="col-sm-10">--}}
-{{--                                    <input type="text" name="name" value="{{$data->name}}" class="form-control" placeholder="Category Name">--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
+                    @php $i=1 @endphp
+                    @foreach($products as $product)
+                        <tr>
 
+                            <td>{{ $i++}}</td>
+                            <td><img src="{{ asset($product->image_url !=NULL || $product->image_url!="" ? $product->image_url:'themes/default/images/all-img/empty.png')}}" style="width: 50px;height:50px"></td>
 
+                            <td>{{$product->name}}</td>
+                            <td>{{$product->price}}</td>
 
-{{--                            <div class="form-group">--}}
-{{--                                <label class="col-sm-2 control-label">Is Enabled</label>--}}
-{{--                                <div class="col-sm-10">--}}
-{{--                                    <select class="form-control" name="is_active" required>--}}
-{{--                                        <option value="1" {{$data->is_active == 1 ? "selected":NULL}}>Enabled</option>--}}
-{{--                                        <option value="0" {{$data->is_active == 0 ? "selected":NULL}}>Disabled</option>--}}
+                            <td style="text-align: center">
+                            <span>
+                                <a class="btn btn-default btn-sm" href="{{route('store_admin.update_products',$product->id)}}">
+                                    <i class="icofont-edit"></i>
+                                </a>
 
+                            </span>
+                                <span class="deliv yes"><a class="btn btn-sm btn-danger" onclick="if(confirm('Are you sure you want to delete this item?')){ event.preventDefault();document.getElementById('delete-form-{{$product->id}}').submit(); }"><i class="icofont-bin"></i></a>
+                                                        <form method="post" action="{{route('store_admin.delete_product')}}"
+                                                              id="delete-form-{{$product->id}}" style="display: none">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <input type="hidden" value="{{$product->id}}" name="id">
+                                                        </form>
+                                </span>
+                            </td>
 
-{{--                                    </select>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-
-{{--                            <div class="form-group">--}}
-{{--                                <div class="col-sm-offset-2 col-sm-10">--}}
-{{--                                    <button type="submit" class="btn btn-lg btn-primary">Upload</button>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </form>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--            <!-- /# card -->--}}
-{{--        </div>--}}
-{{--        <!-- /# column -->--}}
-{{--    </div>--}}
-
-
+    </div>
 @endsection

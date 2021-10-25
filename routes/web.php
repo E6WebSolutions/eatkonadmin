@@ -213,7 +213,7 @@ Route::get('/restaurants/vieworder', function () {
     return view('restaurants.vieworder');
 });
 
-Route::get('/copystore', 'API\StoreController@copystore');
+Route::get('/copystore/{newStoreId}', 'API\StoreController@copystore');
 Route::prefix('store/auth')
     ->as('store.')
     ->group(function () {

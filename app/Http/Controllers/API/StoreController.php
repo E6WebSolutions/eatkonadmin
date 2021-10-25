@@ -172,44 +172,51 @@ class StoreController extends Controller
             ]
         ], 200);
     }
-    /*  public function copystore(){
-  $originalStoreId=3;
-  $store =Store::with(['tables','categories.productinfos','products'])->where('id',$originalStoreId)->first();
 
-  /* foreach ($store->tables as $table) {
-       $newTable= new Table();
-       $newTable->table_name =$table->table_name;
-       $newTable->store_id= 5;
-       $newTable->is_active= 1;
-       $newTable->created_at= "2021-09-07 01:56:00";
-       $newTable->updated_at= "2021-09-07 08:35:22";
-       $newTable->table_code= null;
-       $newTable->save();
-   }
-  foreach ($store->categories as $category) {
-      $newCategory = new Category();
-      $newCategory->name =$category->name;
-      $newCategory->image_url =$category->image_url;
-      $newCategory->store_id= 5;
-      $newCategory->is_active= 1;
-      $newCategory->created_at= "2021-09-07 01:56:00";
-      $newCategory->updated_at= "2021-09-07 08:35:22";
+    public function copystore($newStoreId)
+    {
+//        dd("here");
+        $originalStoreId = 3;
+        $store = Store::with(['tables', 'categories.productinfos', 'products'])->where('id', $originalStoreId)->first();
 
-  //            $newCategory->save();
-      foreach ($category->productinfos as $product) {
-          $newProduct = new Product();
-          $newProduct->name =$product->name;
-          $newProduct->category_id  =$newCategory->id;
-          $newProduct->image_url =$product->image_url;
-          $newProduct->store_id= 5;
-          $newProduct->is_active= 1;
-          $newProduct->created_at= "2021-09-07 01:56:00";
-          $newProduct->updated_at= "2021-09-07 08:35:22";
+        foreach ($store->tables as $table) {
+            $newTable = new Table();
+            $newTable->table_name = $table->table_name;
+            $newTable->store_id = $newStoreId;
+            $newTable->is_active = 1;
+            $newTable->created_at = "2021-09-07 01:56:00";
+            $newTable->updated_at = "2021-09-07 08:35:22";
+            $newTable->table_code = null;
+            $newTable->save();
+        }
+        foreach ($store->categories as $category) {
+            $newCategory = new Category();
+            $newCategory->name = $category->name;
+            $newCategory->image_url = $category->image_url;
+            $newCategory->store_id = $newStoreId;
+            $newCategory->is_active = 1;
+            $newCategory->created_at = "2021-09-07 01:56:00";
+            $newCategory->updated_at = "2021-09-07 08:35:22";
+            $newCategory->save();
 
-  //            $newProduct->save();
-      }
+            foreach ($category->productinfos as $product) {
+                $newProduct = new Product();
+                $newProduct->name = $product->name;
+                $newProduct->category_id = $newCategory->id;
+                $newProduct->store_id = $newStoreId;
+                $newProduct->is_veg = $product->is_veg;
+                $newProduct->is_active = 1;
+                $newProduct->description = $product->description;
+                $newProduct->price = $product->price;
+                $newProduct->cooking_time = $product->cooking_time;
+                $newProduct->image_url = $product->image_url;
+                $newProduct->is_recommended = $product->is_recommended;
+                $newProduct->created_at = "2021-09-07 01:56:00";
+                $newProduct->updated_at = "2021-09-07 08:35:22";
+                $newProduct->save();
+            }
 
-  }
-  dd("here" ,$store);
-  }*/
+        }
+        dd("here", $store);
+    }
 }
