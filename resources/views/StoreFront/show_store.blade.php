@@ -23,11 +23,11 @@
         <div class="contact-header">
             <div class="row">
                 <div class="col-6">
-                    <a href="tel:9537354218" class="font-semi text-black"><i class="text-danger icofont-ui-dial-phone marun-i"></i> {{ $storeDetail->phone }}</a>
+                    <a href="tel:{{ $storeDetail->phone }}" class="font-semi text-black"><i class="text-danger icofont-ui-dial-phone marun-i"></i> {{ $storeDetail->phone }}</a>
                 </div>
                 @if($storeDetail->is_call_waiter_enable == 1)
                 <div class="col-6">
-                    <div class="right-content text-right">
+                    <div class="right-content text-right" v-if="table_no > 0">
                         <a href="javascript:void(0)" class="font-semi text-black" data-toggle="modal" data-target="#call-to-waiter"><i class="icofont-boy text-dark marun-i"></i> Call the waiter</a>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
         </div>
     </div>
 </div>
-<div class="main_page" id="dashboard-page">
+<div class="main_page" id="dashboard-page" v-if="isLoading == false">
     <!-- main content -->
     <div class="page-content">
         <div class="content-wrapper">
@@ -146,7 +146,7 @@
 </div>
 <!-- main content -->
 <!-- footer section -->
-<div class="custom-footer text-center text-md-left text-lg-left bg-black">
+<div class="custom-footer text-center text-md-left text-lg-left bg-black" v-if="isLoading == false">
     <div class="container">
         <div class="custom-footer-block">
             <div class="row">
@@ -580,7 +580,7 @@
                         </div>
                         <div class="form-group mb-4">
                             <label for="exampleInputNEWPassword1">Phone Number *</label>
-                            <input type="number" id="phone" v-model="phone" placeholder="Phone Number" class="form-control" name="phone" value="">
+                            <input @input="acceptPhoneNumber" type="text" id="phone" v-model="phone" placeholder="Phone Number" class="form-control" name="phone" value="">
                             <p v-for="error in errors" v-if="errors.length && error.type == 'phone'" class="validation-error">@{{ error.msg }}</p>
                         </div>
                         <div class="form-group mb-4">
@@ -601,6 +601,10 @@
                                                     } ?>>Room</option>
                             </select>
                             <p v-for="error in errors" v-if="errors.length && error.type == 'order_type'" class="validation-error">@{{ error.msg }}</p>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="exampleInputNEWPassword1">Table Number</label>
+                            <input type="text" class="form-control" :value="table_no" disabled>
                         </div>
                         <div class="form-group mb-4" v-if="is_vehicle == true">
                             <label for="exampleInputNEWPassword1">Vehicle Number </label><input type="text" placeholder="Vehicle number" class="form-control" name="customer_vehicle_no" v-model="customer_vehicle_no" value="">
@@ -678,19 +682,21 @@
                 </div>
                 <div class="modal-btn-row w-100 bg-green px-4 py-2">
                     <div class="row align-items-center">
-                        <div class="col-8 p-0">
-                            <div class="more text-center text-md-left text-lg-left total-cost">
-                                <h6 class="m-0">Total Cost: <price>Rs. @{{ parseFloat(subTotal) + parseFloat(storeData . service_charge) + parseFloat(storeData . tax) - parseFloat(discount) }}</span></price>
-                                </h6>
-                                <p class="m-0">Confirm your order.</p>
-                            </div>
+                        <div class="col-12 p-0 pay-now">
+                            <a href="javascript:void(0)" @click="checkForm()">
+                                <div class="more text-center text-md-left text-lg-left total-cost">
+                                    <h6 class="m-0">Total Cost: <price>Rs. @{{ parseFloat(subTotal) + parseFloat(storeData . service_charge) + parseFloat(storeData . tax) - parseFloat(discount) }}</span></price>
+                                    </h6>
+                                    <p class="m-0">Confirm your order.</p>
+                                </div>
+                            </a>
                         </div>
                         <!-- <div class="col-4 p-0 text-right">
                                 <button type="submit"><i class="icofont-simple-right"></i></button>
                             </div> -->
-                        <div class="col-4 p-0 text-right cart-form-back">
+                        <!-- <div class="col-4 p-0 text-right cart-form-back">
                             <i class="icofont-simple-right" @click="checkForm()"></i>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <!-- </form> -->
@@ -746,7 +752,7 @@
                                 <a class="mr-5 btn btn-square min-width-125  mb-10 order-status-button text-white false btn-warning btn-r-complete" v-if="(customer_order.status == 5) || (customer_order.status == 4)">@{{ 'Order Completed' }} </a>
                             </div>
                             <div class="col-6">
-                                <div class="text-right" v-if="customer_order.call_waiter_enabled == 1">
+                                <div class="text-right" v-if="customer_order.call_waiter_enabled == 1 && table_no > 0">
                                     <a class=" btn btn-square btn-secondary min-width-125 mb-10 order-status-button text-white" @click="order_call_to_waiter(customer_order.id)">Call The Waiter
                                     </a>
                                     <span :id="customer_order.id" style="display: none;">calling......</span>
@@ -798,7 +804,7 @@
                         </div>
                         <div class="form-group mb-4">
                             <label for="exampleInputNEWPassword1">Phone Number *</label>
-                            <input type="number" id="customer_mobile" v-model="customer_mobile" placeholder="Phone Number" class="form-control" name="customer_mobile" value="">
+                            <input @input="acceptCustomerNumber" type="text" id="customer_mobile" v-model="customer_mobile" placeholder="Phone Number" class="form-control" name="customer_mobile" value="">
                             <p v-for="error in errors" v-if="errors.length && error.type == 'customer_mobile'" class="validation-error">@{{ error.msg }}</p>
                         </div>
                         <div class="form-group mb-4">
@@ -806,14 +812,16 @@
                             <input type="text" placeholder="Comment" class="form-control" name="customer_comment" value="" v-model="customer_comment">
                         </div>
                         <div class="form-group mb-4">
-                            <label for="exampleInputNEWPassword1">Select Your Table *</label>
-                            <select type="text" id="customer_table_number" v-model="customer_table_number" class="form-control" name="customer_table_number">
+                            <label for="exampleInputNEWPassword1">Your Table no</label>
+                            <input type="text" class="form-control" :value="table_no" disabled>
+                            <!-- <label for="table_no"><strong> @{{ table_no }} </strong></label> -->
+                            <!-- <select type="text" id="customer_table_number" v-model="customer_table_number" class="form-control" name="customer_table_number">
                                 <option value="">Select Your Table</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                                 <option value="4">4</option>
-                            </select>
+                            </select> -->
                             <p v-for="error in errors" v-if="errors.length && error.type == 'customer_table_number'" class="validation-error">@{{ error.msg }}</p>
                         </div>
                     </div>

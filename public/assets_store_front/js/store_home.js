@@ -102,10 +102,11 @@ var app = new Vue({
     },
     computed: {
     },
-    
+
 
     mounted: function () {
         console.log('running------');
+        // this.isLoading = false;
 
         if (localStorage.selectedItemId) {
             this.selectedItemId = JSON.parse(localStorage.selectedItemId);
@@ -120,6 +121,14 @@ var app = new Vue({
     },
 
     methods: {
+        acceptCustomerNumber() {
+            var x = this.customer_mobile.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+            this.customer_mobile = !x[2] ? x[1] : x[1] + x[2] + (x[3] ? + x[3] : '');
+        },
+        acceptPhoneNumber() {
+            var x = this.phone.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+            this.phone = !x[2] ? x[1] : x[1] + x[2] + (x[3] ? + x[3] : '');
+        },
         get: function () {
             let vm = this;
             vm.isLoading = true;
@@ -128,24 +137,25 @@ var app = new Vue({
                 search: this.res_search,
                 view_id: this.store_id,
             })
-            .then(function (response) {
-                // console.log('main rsponse-----------')
-                
-                vm.items = []
-                
-                vm.items = response.data.AllStoreCategory;
-                // console.log('after----',vm.items)
-                vm.RecommendedProduct = response.data.AllStoreRecommendedProduct;
-                // console.log(vm.RecommendedProduct.length)
-                vm.AllStoreItem = response.data.AllStoreItem;
-                vm.storeData = response.data.storeData;
-                vm.store_id = vm.storeData.view_id;
-                vm.storePaymentSettings = response.data.storePaymentSettings;
-            })
-            .catch(function (error) {
-                vm.loaded = false;
-                vm.isLoading = false;
-            });
+                .then(function (response) {
+                    // console.log('main rsponse-----------')
+
+                    vm.items = []
+
+                    vm.items = response.data.AllStoreCategory;
+                    // console.log('after----',vm.items)
+                    vm.RecommendedProduct = response.data.AllStoreRecommendedProduct;
+                    // console.log(vm.RecommendedProduct.length)
+                    vm.AllStoreItem = response.data.AllStoreItem;
+                    vm.storeData = response.data.storeData;
+                    vm.store_id = vm.storeData.view_id;
+                    vm.storePaymentSettings = response.data.storePaymentSettings;
+                    vm.isLoading = false;
+                })
+                .catch(function (error) {
+                    vm.loaded = false;
+                    vm.isLoading = false;
+                });
         },
         getCategoryItems(CategoryItem) {
             this.categoryItemsDetail = CategoryItem
@@ -172,7 +182,7 @@ var app = new Vue({
         },
         // this function for update food item quantity
         BindQuantity(item_id) {
-            console.log(localStorage.getItem("selectedItem"))
+            // console.log(localStorage.getItem("selectedItem"))
             if (item_id != undefined && localStorage.getItem("selectedItem") !== null && localStorage.getItem('selectedItem') != '') {
                 var storageItemData = JSON.parse(localStorage.getItem('selectedItem'));
                 var valObj = storageItemData.filter(function (elem) {
@@ -290,6 +300,9 @@ var app = new Vue({
             if (!this.phone) this.errors.push({ type: 'phone', msg: "Please enter Your mobile number." });
             if (!this.order_type) this.errors.push({ type: 'order_type', msg: "Please select order type." });
             if (this.is_vehicle == true && !this.customer_vehicle_no) this.errors.push({ type: 'customer_vehicle_no', msg: "Please enter your vehicle number." });
+            if(this.phone.length < 10){
+                this.errors.push({ type: 'phone', msg: "Please enter valid mobile number." })
+            }
             if (this.errors.length == 0) {
                 $('#payment-method').modal('show');
             }
@@ -353,9 +366,11 @@ var app = new Vue({
             this.errors = [];
             if (!this.customer_name) this.errors.push({ type: 'customer_name', msg: "Please enter Your Name." });
             if (!this.customer_mobile) this.errors.push({ type: 'customer_mobile', msg: "Please enter Your mobile number." });
-            if (!this.customer_table_number) this.errors.push({ type: 'customer_table_number', msg: "Please select order type." });
+            // if (!this.customer_table_number) this.errors.push({ type: 'customer_table_number', msg: "Please select order type." });
             // e.preventDefault();
-
+            if(this.customer_mobile.length < 10){
+                this.errors.push({ type: 'customer_mobile', msg: "Please enter valid mobile number." })
+            }
             if (this.errors.length == 0) {
                 let vm = this;
                 vm.isLoading = true;
@@ -363,7 +378,7 @@ var app = new Vue({
                     customer_name: this.customer_name,
                     customer_phone: this.customer_mobile,
                     store_id: this.store_id,
-                    table_name: this.customer_table_number,
+                    table_name: this.table_no,
                     comment: this.customer_comment
                 })
                     .then(function (response) {
@@ -416,22 +431,22 @@ var app = new Vue({
                 discount: this.discount,
                 vehicle_no: this.customer_vehicle_no
             })
-            .then(function (response) {
-                if (response.data.success == true) {
-                    $('#place-order').modal('show');
-                    vm.place_order_detail = response.data.payload.new_order;
-                    vm.customer_phone = response.data.payload.data[0].order_unique_id
-                    localStorage.removeItem('selectedItemId');
-                    localStorage.removeItem('selectedItem');
-                    vm.selectedItemId = []
-                    vm.selected_menu_item = []
-                }
+                .then(function (response) {
+                    if (response.data.success == true) {
+                        $('#place-order').modal('show');
+                        vm.place_order_detail = response.data.payload.new_order;
+                        vm.customer_phone = response.data.payload.data[0].order_unique_id
+                        localStorage.removeItem('selectedItemId');
+                        localStorage.removeItem('selectedItem');
+                        vm.selectedItemId = []
+                        vm.selected_menu_item = []
+                    }
 
-            })
-            .catch(function (error) {
-                vm.loaded = false;
-                vm.isLoading = false;
-            });
+                })
+                .catch(function (error) {
+                    vm.loaded = false;
+                    vm.isLoading = false;
+                });
         },
         check_order_status: function () {
             $('#cart').modal('hide');
@@ -442,13 +457,13 @@ var app = new Vue({
             axios.post(get_order_indexUrl, {
                 customer_phone: this.customer_phone
             })
-            .then(function (response) {
-                vm.customer_orders = response.data.payload.data;
-            })
-            .catch(function (error) {
-                vm.loaded = false;
-                vm.isLoading = false;
-            });
+                .then(function (response) {
+                    vm.customer_orders = response.data.payload.data;
+                })
+                .catch(function (error) {
+                    vm.loaded = false;
+                    vm.isLoading = false;
+                });
         },
         get_menu() {
             $('#cart').modal('hide');
@@ -471,13 +486,13 @@ var app = new Vue({
                     nav: false,
                     responsive: {
                         0: {
-                            items: 4
+                            items: 3
                         },
                         600: {
                             items: 6
                         },
                         1000: {
-                            items: 12
+                            items: 8
                         }
                     }
                 }).trigger('to.owl.carousel', app.items.length)
@@ -492,7 +507,7 @@ var app = new Vue({
                     nav: false,
                     responsive: {
                         0: {
-                            items: 4
+                            items: 3
                         },
                         600: {
                             items: 6

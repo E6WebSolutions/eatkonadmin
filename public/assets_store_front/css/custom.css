@@ -1017,6 +1017,10 @@ a.phpdebugbar-restore-btn{
     font-family: 'Poppins' !important;
 }
 .success-img { margin-left: 520px; }
+.pay-now a, .pay-now a:hover, .pay-now a:focus, .pay-now a:active {
+    text-decoration: none;
+    color: inherit !important;
+}
 @media only screen and (min-width: 300px) and (max-width: 575px) {
 	.search-result-header input, .search-result-header input:focus{
 		height: 45px;
