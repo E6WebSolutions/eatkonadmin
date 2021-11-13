@@ -200,7 +200,7 @@
             <!-- Modal Header -->
             <div class="modal-footer p-0 py-3">
                 <button class="back-btn p-0 px-3" data-dismiss="modal"> <i class="icofont-rounded-left back-page"></i>
-                    Back 123</button>
+                    Back </button>
             </div>
             <div class="modal-header mb-0 p-0 px-3">
                 <h2 class="font-weight-bold text-white text-center mb-0 mb-3">@{{ categoryItemsDetail.name}}</h2>
