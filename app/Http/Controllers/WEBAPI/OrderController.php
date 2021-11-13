@@ -12,6 +12,8 @@ use App\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Notification\NotificationController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Stripe;
 
 class OrderController extends Controller
 {
@@ -42,15 +44,15 @@ class OrderController extends Controller
                 } else {
                     $addon = Addon::find($value['addon']);
                     $temp['name'] = $product['name'] . "-" . $addon->addon_name;
-//                            $temp['price'] = $product['price']+$addon->price;
+                    // $temp['price'] = $product['price']+$addon->price;
                     $temp['price'] = $addon->price;
                 }
                 $temp['quantity'] = $value['count'];
-//                        $items[] = $temp;
+                // $items[] = $temp;
                 $orderDetail = OrderDetails::create($temp);
-//                        return $orderDetail;
+                // return $orderDetail;
                 if ($value['extra'] != NULL) {
-//                            return $value['extra'];
+                    // return $value['extra'];
                     $temp = array();
                     foreach ($value['extra'] as $value) {
                         $addon = Addon::find($value['addon_id']);
@@ -119,6 +121,26 @@ class OrderController extends Controller
                 'data' => $response
             ]
         ], 200);
+    }
+
+    /**
+     * success response method.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function stripePost(Request $request)
+    {
+        Stripe\Stripe::setApiKey('sk_test_51JZVw5SBo1OIRmJ2Eb2EjHHvh6TpS98xpnxV7IBfH8tNOYDUmsw7V4Y4pGhPBTE4AAg3Fh6IpsrUKqEnyDr8kApU001dx7PtLC');
+        Stripe\Charge::create ([
+                "amount" => 100 * 100,
+                "currency" => "usd",
+                "source" => $request->stripeToken,
+                "description" => "This payment is tested purpose phpcodingstuff.com"
+        ]);
+   
+        Session::flash('success', 'Payment successful!');
+           
+        return back();
     }
 
 }

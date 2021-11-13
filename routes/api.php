@@ -66,6 +66,8 @@ Route::prefix('/web/store/')
         Route::post('/checkout/payment', 'WEBAPI\PaymentController@processPayment');
         Route::post('/coupon/add', 'WEBAPI\StoreController@verify_coupon');
 
+        Route::post('stripe', 'WEBAPI\OrderController@stripePost')->name('stripe.post');
+
     });
 
 

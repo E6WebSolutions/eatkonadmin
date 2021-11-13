@@ -101,6 +101,20 @@ var app = new Vue({
 
     },
     computed: {
+        // filteredRecipes() {
+        //     let tempRecipes = this.items
+        //     console.log('monika call')
+        //     // Process search input
+        //     if (this.res_search != '' && this.res_search) {
+        //         tempRecipes = tempRecipes.filter((item) => {
+        //             return item.name
+        //                 .toUpperCase()
+        //                 .includes(this.res_search.toUpperCase())
+        //         })
+        //     }
+        //     console.log(tempRecipes);
+        //     return tempRecipes
+        // }
     },
 
 
@@ -132,7 +146,7 @@ var app = new Vue({
         get: function () {
             let vm = this;
             vm.isLoading = true;
-            // console.log('call the function-----end', this.res_search);
+            console.log('call the function-----end', this.res_search);
             axios.post(search_list_indexUrl, {
                 search: this.res_search,
                 view_id: this.store_id,
@@ -159,12 +173,37 @@ var app = new Vue({
         },
         getCategoryItems(CategoryItem) {
             this.categoryItemsDetail = CategoryItem
+            $(".modal-body").animate({ scrollTop: 0 }, 400);
+        },
+        cartScroll() {
+            $(".modal-body").animate({ scrollTop: 0 }, 400);
         },
         getItemDetail(itemData) {
             // console.log(itemData)
             this.productDetail = itemData
+            $(".modal-body").animate({ scrollTop: 0 }, 400);
         },
         filtersearch: function () {
+            this.get();
+            // let vm = this;
+            
+            // let result = this.items
+            // if (!this.res_search)
+            //     return this.items = result
+
+            // const res_search = this.res_search.toLowerCase()
+
+            // const filter = event =>
+            //     event.name.toLowerCase().includes(res_search)
+            // // event.state.toLowerCase().includes(filterValue) ||
+            // // event.tags.some(tag => tag.toLowerCase().includes(filterValue))
+
+            // vm.items = result.filter(filter)
+            // console.log(this.items)
+
+        },
+        clearfiltersearch: function () {
+            this.res_search = ''
             this.get();
         },
         addToCart(selectedItem) {
@@ -300,7 +339,7 @@ var app = new Vue({
             if (!this.phone) this.errors.push({ type: 'phone', msg: "Please enter Your mobile number." });
             if (!this.order_type) this.errors.push({ type: 'order_type', msg: "Please select order type." });
             if (this.is_vehicle == true && !this.customer_vehicle_no) this.errors.push({ type: 'customer_vehicle_no', msg: "Please enter your vehicle number." });
-            if(this.phone.length < 10){
+            if (this.phone.length < 10) {
                 this.errors.push({ type: 'phone', msg: "Please enter valid mobile number." })
             }
             if (this.errors.length == 0) {
@@ -340,6 +379,8 @@ var app = new Vue({
         clearOrderData() {
             this.customer_orders = [];
             this.customer_phone = null
+            this.isLoading = false
+
         },
         order_call_to_waiter(order_id) {
             $('#' + order_id).css("display", "block")
@@ -368,7 +409,7 @@ var app = new Vue({
             if (!this.customer_mobile) this.errors.push({ type: 'customer_mobile', msg: "Please enter Your mobile number." });
             // if (!this.customer_table_number) this.errors.push({ type: 'customer_table_number', msg: "Please select order type." });
             // e.preventDefault();
-            if(this.customer_mobile.length < 10){
+            if (this.customer_mobile.length < 10) {
                 this.errors.push({ type: 'customer_mobile', msg: "Please enter valid mobile number." })
             }
             if (this.errors.length == 0) {
@@ -486,7 +527,7 @@ var app = new Vue({
                     nav: false,
                     responsive: {
                         0: {
-                            items: 3
+                            items: 2
                         },
                         600: {
                             items: 6
@@ -507,7 +548,7 @@ var app = new Vue({
                     nav: false,
                     responsive: {
                         0: {
-                            items: 3
+                            items: 2
                         },
                         600: {
                             items: 6

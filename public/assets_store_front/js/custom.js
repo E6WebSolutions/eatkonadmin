@@ -1,10 +1,14 @@
 $(document).ready(function () {
-    $(document).on('click','.item-added', function(){
+    //add on 13-11-2021
+    // $('.owl-carousel')[0].slick.refresh()
+    //end
+
+    $(document).on('click', '.item-added', function () {
         $('.item-add').addClass('item-added-popup');
     });
-    $(document).on('click','.item-close-btn', function(){
+    $(document).on('click', '.item-close-btn', function () {
         $('.item-add').removeClass('item-added-popup');
-    });  
+    });
 
 
     /*====================== js for sticky and mobile menu ====================== */
@@ -15,15 +19,15 @@ $(document).ready(function () {
         $(".main_page").css('min-height', min_height + 'px');
     });
 
-    $(window).scroll(function(){
+    $(window).scroll(function () {
         var navHeight = $('#custom-header').height();
         var sticky = $('#custom-header');
         if ($(window).scrollTop() > 0) {
             sticky.addClass("sticky")
-            $('#dashboard-page').css('padding-top',navHeight+"px");
+            $('#dashboard-page').css('padding-top', navHeight + "px");
         } else {
             sticky.removeClass("sticky");
-            $('#dashboard-page').css('padding-top',0);
+            $('#dashboard-page').css('padding-top', 0);
         }
     });
     $('.jb_front_nav_close button').on('click', function () {
@@ -31,57 +35,57 @@ $(document).ready(function () {
     });
     /*====================== js for sticky and mobile menu ====================== */
 
-     /*====================== js for scrollTop ====================== */
-        var btn = $('#button');
+    /*====================== js for scrollTop ====================== */
+    var btn = $('#button');
 
-            $(window).scroll(function() {
-            if ($(window).scrollTop() > 500) {
-               btn.addClass('show');
-            } else {
-               btn.removeClass('show');
-            }
-            });
+    $(window).scroll(function () {
+        if ($(window).scrollTop() > 500) {
+            btn.addClass('show');
+        } else {
+            btn.removeClass('show');
+        }
+    });
 
-            btn.on('click', function(e) {
-            e.preventDefault();
-            $('html, body').animate({scrollTop:0}, '500');
-            });
+    btn.on('click', function (e) {
+        e.preventDefault();
+        $('html, body').animate({ scrollTop: 0 }, '500');
+    });
     /*====================== js for scrollTop ====================== */
 
     $('.food-slide').owlCarousel({
-        loop:true,        
-        nav:false, 
-        margin:10,
-        dot:false,
-        center: true,      
-        responsive:{
-            0:{
-                items:4
+        loop: true,
+        nav: false,
+        margin: 10,
+        dot: false,
+        center: true,
+        responsive: {
+            0: {
+                items: 4
             },
-            600:{
-                items:6
+            600: {
+                items: 6
             },
-            1000:{
-                items:12
+            1000: {
+                items: 12
             }
         }
     });
 
 
     $('.recommend-slide').owlCarousel({
-        loop:true,        
-        nav:false, 
-        margin:15,
-        dot:false,     
-        responsive:{
-            0:{
-                items:2
+        loop: true,
+        nav: false,
+        margin: 15,
+        dot: false,
+        responsive: {
+            0: {
+                items: 2
             },
-            600:{
-                items:6
+            600: {
+                items: 6
             },
-            1000:{
-                items:6
+            1000: {
+                items: 6
             }
         }
     });
@@ -101,27 +105,27 @@ $(document).ready(function () {
     // });
 
     $('#qty_input').prop('disabled', true);
-    $('#plus-btn').click(function(){
-    	$('#qty_input').val(parseInt($('#qty_input').val()) + 1 );
-    	    });
-        $('#minus-btn').click(function(){
-    	$('#qty_input').val(parseInt($('#qty_input').val()) - 1 );
-    	if ($('#qty_input').val() == 0) {
-			$('#qty_input').val(1);
-		}
+    $('#plus-btn').click(function () {
+        $('#qty_input').val(parseInt($('#qty_input').val()) + 1);
+    });
+    $('#minus-btn').click(function () {
+        $('#qty_input').val(parseInt($('#qty_input').val()) - 1);
+        if ($('#qty_input').val() == 0) {
+            $('#qty_input').val(1);
+        }
 
-    	    });
+    });
     /*====================== web slider ====================== */
-    $('#home-slider').owlCarousel( {
+    $('#home-slider').owlCarousel({
         loop: true,
         center: true,
         items: 1,
         autoplay: true,
-        dots:true,
-      nav:true,
+        dots: true,
+        nav: true,
         autoplayTimeout: 4000,
         smartSpeed: 450,
-      navText: ['<i class="fa fa-angle-left"></i>','<i class="fa fa-angle-right"></i>'],
+        navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
         responsive: {
             0: {
                 items: 1
@@ -134,55 +138,57 @@ $(document).ready(function () {
             }
         }
     });
-    
-    $('#team-slider').owlCarousel( {
+
+    $('#team-slider').owlCarousel({
         loop: true,
         center: true,
         items: 1,
         autoplay: false,
-        dots:false,
-      nav:true,
-      animateOut: 'fadeOut',
+        dots: false,
+        nav: true,
+        animateOut: 'fadeOut',
         autoplayTimeout: 1000,
-      navText: ['<i class="fa fa-angle-left"></i>','<i class="fa fa-angle-right"></i>'],
+        navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
     });
     /*====================== web slider ====================== */
-    
+
+
+
     /*====================== custom video ====================== */
     // video icon poster frame click event
-    $(document).on('click','.js-videoPoster',function(ev) {
+    $(document).on('click', '.js-videoPoster', function (ev) {
         ev.preventDefault();
         var $poster = $(this);
         var $wrapper = $poster.closest('.js-videoWrapper');
         videoPlay($wrapper);
-        });
+    });
 
-        // play the targeted video (and hide the poster frame)
-        function videoPlay($wrapper) {
+    // play the targeted video (and hide the poster frame)
+    function videoPlay($wrapper) {
         var $iframe = $wrapper.find('.js-videoIframe');
         var src = $iframe.data('src');
         // hide poster
         $wrapper.addClass('videoWrapperActive');
         // add iframe src in, starting the video
-        $iframe.attr('src',src);
-        }
+        $iframe.attr('src', src);
+    }
 
-        // stop the targeted/all videos (and re-instate the poster frames)
-        function videoStop($wrapper) {
+    // stop the targeted/all videos (and re-instate the poster frames)
+    function videoStop($wrapper) {
         // if we're stopping all videos on page
         if (!$wrapper) {
-           var $wrapper = $('.js-videoWrapper');
-           var $iframe = $('.js-videoIframe');
-        // if we're stopping a particular video
+            var $wrapper = $('.js-videoWrapper');
+            var $iframe = $('.js-videoIframe');
+            // if we're stopping a particular video
         } else {
-           var $iframe = $wrapper.find('.js-videoIframe');
+            var $iframe = $wrapper.find('.js-videoIframe');
         }
         // reveal poster
         $wrapper.removeClass('videoWrapperActive');
         // remove youtube link, stopping the video from playing in the background
-        $iframe.attr('src','');
-        }
+        $iframe.attr('src', '');
+    }
     /*====================== custom video ====================== */
-    
+
 });/*====================== all js end ====================== */
 

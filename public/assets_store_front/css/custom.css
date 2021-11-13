@@ -328,8 +328,12 @@ span.label-slide {
 .footer-content i:before {
     font-size: 20px;
 }
+.modal, /* to hide footer menu while menu is open */
 .modal-content{
 	height: 100vh;
+}
+.modal.my-order .modal-body { /* to remove white space in modal bottom */
+    margin-bottom: 0 !important;
 }
 .item-listing .modal-content, .red-bg, .red-bg1{
 	background-color: #bc2c3d;	
@@ -476,6 +480,13 @@ p.item-badge-v1.d-block {
 a.recommend-slide-content img {
     border-radius: 8px;
 }
+/* Alignments of slider to all content on 06-11-2021 */
+.home_full_bg .food-top-slider,
+.home_full_bg .section-recommend{
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+}
+.home_full_bg .section-recommend .container{padding: 0 !important;}
 .add-notification {
     position: fixed;
     top: 10px;
@@ -1046,4 +1057,8 @@ a.phpdebugbar-restore-btn{
 		max-width: 1440px !important;
 	}
     
+}
+/* for sticky footer btn */
+.cart.modal .modal-dialog{
+    transform: none !important;
 }

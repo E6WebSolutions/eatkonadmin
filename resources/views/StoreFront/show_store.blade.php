@@ -39,12 +39,20 @@
 <div class="search-container">
     <div class="container">
         <div class="search-result-header py-3">
-            <form class="position-relative">
-                <div class="form-group position-relative mb-0">
+            <div class="position-relative">
+                <!-- <div class="form-group position-relative mb-0">
                     <input type="text" class="" v-model="res_search" id="res_search" name="res_search" placeholder="Search for Products.." v-on:keyup="filtersearch()">
                     <i class="fa fa-search" aria-hidden="true"></i>
+                </div> -->
+                <div class="form-group input-group position-relative mb-0">
+                    <input type="text" class="form-control" v-model="res_search" id="res_search" name="res_search" placeholder="Search for Products..">
+                    {{-- <i class="fa fa-search" aria-hidden="true"></i> --}}
+                    <div class="input-group-append">
+                        <button class="btn btn-serach-bar" v-if="res_search != '' " @click="clearfiltersearch"><b class="fa fa-times" aria-hidden="true"></b></button>
+                        <button class="btn btn-serach-bar" @click="filtersearch()">Search</button>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -88,7 +96,7 @@
                 </div>
             </section>
             <section class="item-listing-block all-time-listing px-3">
-                <div class="listing-category mb-3" v-for="category in AllStoreItem">
+                <div class="listing-category mb-3" v-for="category in AllStoreItem" v-if="category.AllItems.length > 0">
                     <div class="section-header pb-2">
                         <h3 class="text-uppercase font-bold mb-0">@{{ category.name.charAt(0).toUpperCase() + category.name.slice(1) }}</h3>
                     </div>
@@ -160,7 +168,7 @@
                 </div>
                 <div class="col-4">
                     <div class="footer-content text-center">
-                        <a href="javascript:void(0)" class="d-block text-black font-semi btn-cart position-relative" data-toggle="modal" data-target="#cart">
+                        <a href="javascript:void(0)" class="d-block text-black font-semi btn-cart position-relative" data-toggle="modal" data-target="#cart" @click="cartScroll()">
                             <i class="d-block icofont-cart"></i>
                             Cart
                             <span class="cart-count">
@@ -192,7 +200,7 @@
             <!-- Modal Header -->
             <div class="modal-footer p-0 py-3">
                 <button class="back-btn p-0 px-3" data-dismiss="modal"> <i class="icofont-rounded-left back-page"></i>
-                    Back</button>
+                    Back 123</button>
             </div>
             <div class="modal-header mb-0 p-0 px-3">
                 <h2 class="font-weight-bold text-white text-center mb-0 mb-3">@{{ categoryItemsDetail.name}}</h2>
@@ -880,7 +888,50 @@
                             </div>
                             <div id="stripe" class="collapse" data-parent="#accordion">
                                 <div class="card-body p-3">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                    <div class="panel-body">
+                                        @if (Session::has('success'))
+                                        <div class="alert alert-success text-center">
+                                            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                                            <p>{{ Session::get('success') }}</p>
+                                        </div>
+                                        @endif
+                                        <form role="form" action="{{ route('stripe.post') }}" method="post" class="require-validation" data-cc-on-file="false" data-stripe-publishable-key="pk_test_51JZVw5SBo1OIRmJ2oarURiSJwfhSILHXDLqL9snbHzDI252ZsQKaZGO67vHc5UeQ4jXa4QkryV2oFWnTwWahFd1m00Umc3O5UL" id="payment-form">
+                                            @csrf
+                                            <div class='form-row row'>
+                                                <div class='col-xs-12 form-group required'>
+                                                    <label class='control-label'>Name on Card</label> <input class='form-control' size='4' type='text'>
+                                                </div>
+                                            </div>
+                                            <div class='form-row row'>
+                                                <div class='col-xs-12 form-group card required'>
+                                                    <label class='control-label'>Card Number</label> <input autocomplete='off' class='form-control card-number' size='20' type='text'>
+                                                </div>
+                                            </div>
+                                            <div class='form-row row'>
+                                                <div class='col-xs-12 col-md-4 form-group cvc required'>
+                                                    <label class='control-label'>CVC</label> <input autocomplete='off' class='form-control card-cvc' placeholder='ex. 311' size='4' type='text'>
+                                                </div>
+                                                <div class='col-xs-12 col-md-4 form-group expiration required'>
+                                                    <label class='control-label'>Expiration Month</label> <input class='form-control card-expiry-month' placeholder='MM' size='2' type='text'>
+                                                </div>
+                                                <div class='col-xs-12 col-md-4 form-group expiration required'>
+                                                    <label class='control-label'>Expiration Year</label> <input class='form-control card-expiry-year' placeholder='YYYY' size='4' type='text'>
+                                                </div>
+                                            </div>
+                                            <div class='form-row row'>
+                                                <div class='col-md-12 error form-group hide'>
+                                                    <div class='alert-danger alert'>Please correct the errors and try
+                                                        again.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <button class="btn btn-primary btn-lg btn-block" type="submit">Pay Now ($100)</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -942,7 +993,8 @@
             <!-- Modal body -->
             <div class="modal-body header-bg cart px-3">
                 <div class="input-group mt-0 rounded overflow-hidden">
-                    <img class="success-img" src="{{asset('assets_store_front/images/success.gif')}}">
+                    <!-- // <img class="success-img" src="{{asset('assets_store_front/images/success.gif')}}"> -->
+                    <i class="fa fa-check-circle fa-7x" style="font-size: 7em;color: lightgreen;margin: 0 auto;"></i>
                 </div>
                 <div class="mb-2 padding-order-details s-order mt-3" v-if="Object.keys(place_order_detail).length !== 0">
                     <div class="p-3-v2 px-3 pt-3 pb-3 bg-white s-order-block mb-3">
@@ -1039,4 +1091,55 @@
     var place_order_indexUrl = "{{url('/api/web/store/create/order')}}";
 </script>
 <script type="text/javascript" src="{{ asset('assets_store_front/js/store_home.js') }}"></script>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script type="text/javascript">
+    $(function() {
+        var $form = $(".require-validation");
+        $('form.require-validation').bind('submit', function(e) {
+            var $form = $(".require-validation"),
+                inputSelector = ['input[type=email]', 'input[type=password]',
+                    'input[type=text]', 'input[type=file]',
+                    'textarea'
+                ].join(', '),
+                $inputs = $form.find('.required').find(inputSelector),
+                $errorMessage = $form.find('div.error'),
+                valid = true;
+            $errorMessage.addClass('hide');
+            $('.has-error').removeClass('has-error');
+            $inputs.each(function(i, el) {
+                var $input = $(el);
+                if ($input.val() === '') {
+                    $input.parent().addClass('has-error');
+                    $errorMessage.removeClass('hide');
+                    e.preventDefault();
+                }
+            });
+            if (!$form.data('cc-on-file')) {
+                e.preventDefault();
+                Stripe.setPublishableKey($form.data('stripe-publishable-key'));
+                Stripe.createToken({
+                    number: $('.card-number').val(),
+                    cvc: $('.card-cvc').val(),
+                    exp_month: $('.card-expiry-month').val(),
+                    exp_year: $('.card-expiry-year').val()
+                }, stripeResponseHandler);
+            }
+        });
+
+        function stripeResponseHandler(status, response) {
+            if (response.error) {
+                $('.error')
+                    .removeClass('hide')
+                    .find('.alert')
+                    .text(response.error.message);
+            } else {
+                /* token contains id, last4, and card type */
+                var token = response['id'];
+                $form.find('input[type=text]').empty();
+                $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+                $form.get(0).submit();
+            }
+        }
+    });
+</script>
 @endpush
