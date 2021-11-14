@@ -128,6 +128,9 @@ var app = new Vue({
         if (localStorage.selectedItem) {
             this.selected_menu_item = JSON.parse(localStorage.selectedItem);
         }
+        if(this.table_no > 0){
+            this.order_type = '1'
+        }
 
         this.get();
         // this.getCuisines();
@@ -339,7 +342,7 @@ var app = new Vue({
             if (!this.phone) this.errors.push({ type: 'phone', msg: "Please enter Your mobile number." });
             if (!this.order_type) this.errors.push({ type: 'order_type', msg: "Please select order type." });
             if (this.is_vehicle == true && !this.customer_vehicle_no) this.errors.push({ type: 'customer_vehicle_no', msg: "Please enter your vehicle number." });
-            if (this.phone.length < 10) {
+            if (this.phone && this.phone.length < 10) {
                 this.errors.push({ type: 'phone', msg: "Please enter valid mobile number." })
             }
             if (this.errors.length == 0) {
@@ -350,7 +353,10 @@ var app = new Vue({
             this.errors = [];
             this.name = null
             this.phone = null
-            this.order_type = null
+            if(this.table_no > 0){
+                this.order_type = '1'
+            }
+            // this.order_type = null
             this.customer_comment = null
             this.customer_mobile = null
             this.customer_name = null

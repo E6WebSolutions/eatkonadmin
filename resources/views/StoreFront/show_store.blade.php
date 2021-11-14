@@ -351,10 +351,14 @@
                         <p class="font-weight-bold m-0"> Cooking Time</p>
                         <p class="text-muted m-0 font-semi">@{{ productDetail.cooking_time }} Minute </p>
                     </div>
-                    <div class="product-detail">
+                    <div class="product-detail my-3">
                         <p class="font-weight-bold mb-0"> Product Details</p>
                         <p class="text-muted small font-semi">@{{ productDetail.description }}</p>
                     </div>
+                    <div class="product-detail">
+                        <p class="mb-0 font-weight-bold">** Photos show in menu may not look similar to actual dish and this photos are just for reference of dish</p>
+                    </div>
+                    <br>
                     <div class="item-btn-customize text-right" v-if="selectedItemId.length && selectedItemId.includes(productDetail.id)">
                         <div class="input-group mb-0 quantity-r aub-quantity d-flex align-items-center ml-3">
                             <div class="input-group-prepend">
@@ -367,14 +371,14 @@
                         </div>
                     </div>
                     <div class="item-btn-customize text-right" v-else>
-                        <span class="btn btn-new-v2" @click="addToCart(productDetail)">Add to cart</span>
+                        <span class="btn btn-new-v2" @click="addToCart(productDetail)">+</span>
                     </div>
                 </div>
                 <div class="item-listing-block mt-3">
                     <div class="item-listing-header header-bg px-3 py-2 mb-2">
                         <h6 class="m-0 text-black"> Maybe You Like this. </h6>
                     </div>
-                    <div class="item-listing-inner-detail border-bottom py-2" v-for="(menuItem,index) of RecommendedProduct" v-if="index < 2">
+                    <div class="item-listing-inner-detail border-bottom py-2 px-3 mb-2" v-for="(menuItem,index) of RecommendedProduct" v-if="index < 2">
                         <div class="row">
                             <div class="col-12">
                                 <div class="s-item position-relative">
