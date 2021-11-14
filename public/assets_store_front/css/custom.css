@@ -452,7 +452,8 @@ button.btn-marun {
 }
 .modal-scroll .modal-body {
     overflow: scroll;
-    margin-bottom: 80px;
+    /* margin-bottom: 80px; */
+    margin-bottom: 0px;
 }
 .item-listing-block {
     background: #fff;

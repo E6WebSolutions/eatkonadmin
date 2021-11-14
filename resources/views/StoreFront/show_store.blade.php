@@ -355,23 +355,31 @@
                         <p class="font-weight-bold mb-0"> Product Details</p>
                         <p class="text-muted small font-semi">@{{ productDetail.description }}</p>
                     </div>
-                    <div class="product-detail">
+                    <div class="product-detail my-3">
                         <p class="mb-0 font-weight-bold">** Photos show in menu may not look similar to actual dish and this photos are just for reference of dish</p>
                     </div>
                     <br>
-                    <div class="item-btn-customize text-right" v-if="selectedItemId.length && selectedItemId.includes(productDetail.id)">
-                        <div class="input-group mb-0 quantity-r aub-quantity d-flex align-items-center ml-3">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-dark btn-sm qun-btn" id="minus-btn" @click="decreaseQuantity(productDetail.id)"><i class="fa fa-minus"></i></button>
-                            </div>
-                            <input type="number" class="form-control border-0 form-control-sm text-center p-0" :class="productDetail.name.replace(/[&\/\\#, +()$~%.:*?<>{}]/g, '_').toLowerCase()" min="1" :value="1" v-bind:value="BindQuantity(productDetail.id)" disabled>
-                            <div class="input-group-prepend">
-                                <button class="btn btn-dark btn-sm qun-btn" id="plus-btn" @click="increaseQuantity(productDetail.id)"><i class="fa fa-plus"></i></button>
+                    <div class="item-listing-inner-detail mb-2">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="s-item position-relative">
+                                    <div class="item-btn-customize text-right" v-if="selectedItemId.length && selectedItemId.includes(productDetail.id)">
+                                        <div class="input-group mb-0 quantity-r aub-quantity d-flex align-items-center ml-3">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-dark btn-sm qun-btn" id="minus-btn" @click="decreaseQuantity(productDetail.id)"><i class="fa fa-minus"></i></button>
+                                            </div>
+                                            <input type="number" class="form-control border-0 form-control-sm text-center p-0" :class="productDetail.name.replace(/[&\/\\#, +()$~%.:*?<>{}]/g, '_').toLowerCase()" min="1" :value="1" v-bind:value="BindQuantity(productDetail.id)" disabled>
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-dark btn-sm qun-btn" id="plus-btn" @click="increaseQuantity(productDetail.id)"><i class="fa fa-plus"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item-btn-customize text-right" v-else>
+                                        <span class="btn btn-new-v2" @click="addToCart(productDetail)">+</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="item-btn-customize text-right" v-else>
-                        <span class="btn btn-new-v2" @click="addToCart(productDetail)">+</span>
                     </div>
                 </div>
                 <div class="item-listing-block mt-3">
@@ -483,16 +491,42 @@
                         <p class="font-weight-bold m-0"> Cooking Time</p>
                         <p class="text-muted m-0 font-semi">@{{ productDetail.cooking_time }} Minute </p>
                     </div>
-                    <div class="product-detail">
+                    <div class="product-detail my-3">
                         <p class="font-weight-bold mb-0"> Product Details</p>
                         <p class="text-muted small font-semi">@{{ productDetail.description }}</p>
+                    </div>
+                    <div class="product-detail my-3">
+                        <p class="mb-0 font-weight-bold">** Photos show in menu may not look similar to actual dish and this photos are just for reference of dish</p>
+                    </div>
+                    <br>
+                    <div class="item-listing-inner-detail mb-2">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="s-item position-relative">
+                                    <div class="item-btn-customize text-right" v-if="selectedItemId.length && selectedItemId.includes(productDetail.id)">
+                                        <div class="input-group mb-0 quantity-r aub-quantity d-flex align-items-center ml-3">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-dark btn-sm qun-btn" id="minus-btn" @click="decreaseQuantity(productDetail.id)"><i class="fa fa-minus"></i></button>
+                                            </div>
+                                            <input type="number" class="form-control border-0 form-control-sm text-center p-0" :class="productDetail.name.replace(/[&\/\\#, +()$~%.:*?<>{}]/g, '_').toLowerCase()" min="1" :value="1" v-bind:value="BindQuantity(productDetail.id)" disabled>
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-dark btn-sm qun-btn" id="plus-btn" @click="increaseQuantity(productDetail.id)"><i class="fa fa-plus"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item-btn-customize text-right" v-else>
+                                        <span class="btn btn-new-v2" @click="addToCart(productDetail)">+</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="item-listing-block mt-3">
                     <div class="item-listing-header header-bg px-3 py-2 mb-2">
                         <h6 class="m-0 text-black"> Maybe You Like this. </h6>
                     </div>
-                    <div class="item-listing-inner-detail border-bottom py-2" v-for="(menuItem,index) of RecommendedProduct" v-if="index < 2">
+                    <div class="item-listing-inner-detail border-bottom px-3 py-2 mb-2" v-for="(menuItem,index) of RecommendedProduct" v-if="index < 2">
                         <div class="row">
                             <div class="col-12">
                                 <div class="s-item position-relative">
@@ -530,12 +564,35 @@
                     </div>
                 </div>
                 <div class="modal-btn-row w-100">
-                    <div class="row">
-                        <div class="col-4 p-0">
-                            <button class="btn-dark" data-dismiss="modal"><i class="icofont-cart"></i></button>
-                        </div>
-                        <div class="col-8 p-0">
-                            <button type="button" class="btn-marun">Add To Cart </button>
+                    <div class="custom-footer-block">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="footer-content text-center">
+                                    <a href="javascript:void(0)" class="d-block text-marun font-semi" @click="get_menu()">
+                                        <i class="d-block icofont-spoon-and-fork"></i>
+                                        Menu
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="footer-content text-center">
+                                    <a href="javascript:void(0)" class="d-block text-black font-semi btn-cart position-relative" data-toggle="modal" data-target="#cart">
+                                        <i class="d-block icofont-cart"></i>
+                                        Cart
+                                        <span class="cart-count">
+                                            @{{ selectedItemId.length }}
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="footer-content text-center">
+                                    <a href="javascript:void(0)" class="d-block text-black font-semi" data-toggle="modal" data-target="#my-order">
+                                        <i class="d-block icofont-paper"></i>
+                                        My Order
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
