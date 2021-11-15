@@ -118,7 +118,7 @@ var app = new Vue({
     },
 
 
-    mounted: function () {
+    mounted: function() {
         console.log('running------');
         // this.isLoading = false;
 
@@ -128,7 +128,7 @@ var app = new Vue({
         if (localStorage.selectedItem) {
             this.selected_menu_item = JSON.parse(localStorage.selectedItem);
         }
-        if(this.table_no > 0){
+        if (this.table_no > 0) {
             this.order_type = '1'
         }
 
@@ -140,21 +140,21 @@ var app = new Vue({
     methods: {
         acceptCustomerNumber() {
             var x = this.customer_mobile.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-            this.customer_mobile = !x[2] ? x[1] : x[1] + x[2] + (x[3] ? + x[3] : '');
+            this.customer_mobile = !x[2] ? x[1] : x[1] + x[2] + (x[3] ? +x[3] : '');
         },
         acceptPhoneNumber() {
             var x = this.phone.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-            this.phone = !x[2] ? x[1] : x[1] + x[2] + (x[3] ? + x[3] : '');
+            this.phone = !x[2] ? x[1] : x[1] + x[2] + (x[3] ? +x[3] : '');
         },
-        get: function () {
+        get: function() {
             let vm = this;
             vm.isLoading = true;
             console.log('call the function-----end', this.res_search);
             axios.post(search_list_indexUrl, {
-                search: this.res_search,
-                view_id: this.store_id,
-            })
-                .then(function (response) {
+                    search: this.res_search,
+                    view_id: this.store_id,
+                })
+                .then(function(response) {
                     // console.log('main rsponse-----------')
 
                     vm.items = []
@@ -169,7 +169,7 @@ var app = new Vue({
                     vm.storePaymentSettings = response.data.storePaymentSettings;
                     vm.isLoading = false;
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     vm.loaded = false;
                     vm.isLoading = false;
                 });
@@ -186,10 +186,10 @@ var app = new Vue({
             this.productDetail = itemData
             $(".modal-body").animate({ scrollTop: 0 }, 400);
         },
-        filtersearch: function () {
+        filtersearch: function() {
             this.get();
             // let vm = this;
-            
+
             // let result = this.items
             // if (!this.res_search)
             //     return this.items = result
@@ -205,7 +205,7 @@ var app = new Vue({
             // console.log(this.items)
 
         },
-        clearfiltersearch: function () {
+        clearfiltersearch: function() {
             this.res_search = ''
             this.get();
         },
@@ -227,7 +227,7 @@ var app = new Vue({
             // console.log(localStorage.getItem("selectedItem"))
             if (item_id != undefined && localStorage.getItem("selectedItem") !== null && localStorage.getItem('selectedItem') != '') {
                 var storageItemData = JSON.parse(localStorage.getItem('selectedItem'));
-                var valObj = storageItemData.filter(function (elem) {
+                var valObj = storageItemData.filter(function(elem) {
                     if (elem.item_id == item_id) return elem.quantity;
                 });
                 // console.log('valObj',valObj)
@@ -239,7 +239,7 @@ var app = new Vue({
         // this function for incerase quantity of item
         increaseQuantity(item_id) {
             // console.log('item_id', item_id)
-            var valObj = this.selected_menu_item.filter(function (elem) {
+            var valObj = this.selected_menu_item.filter(function(elem) {
                 if (elem.item_id == item_id) return elem.quantity;
             });
             // console.log(this.valObj)
@@ -250,7 +250,7 @@ var app = new Vue({
         },
         // this function for incerase quantity of item
         decreaseQuantity(item_id) {
-            var valObj = this.selected_menu_item.filter(function (elem) {
+            var valObj = this.selected_menu_item.filter(function(elem) {
                 if (elem.item_id == item_id) return elem.quantity;
             });
 
@@ -258,17 +258,17 @@ var app = new Vue({
                 var updatedQua = parseFloat(valObj[0].quantity) - 1;
                 valObj[0].quantity = updatedQua;
                 localStorage.setItem('selectedItem', JSON.stringify(this.selected_menu_item))
-                // $('#'+item_id).val(updatedQua);
+                    // $('#'+item_id).val(updatedQua);
                 $('.' + valObj[0].name.replace(/[&\/\\#, +()$~%.:*?<>{}]/g, '_').toLowerCase()).val(updatedQua);
             } else {
-                var newMenuItemIdArray = this.selectedItemId.filter(function (e) {
+                var newMenuItemIdArray = this.selectedItemId.filter(function(e) {
                     return e != item_id;
                 });
 
                 this.selectedItemId = newMenuItemIdArray;
                 localStorage.setItem('selectedItemId', JSON.stringify(this.selectedItemId));
 
-                var newMenuItemArray = this.selected_menu_item.filter(function (elem) {
+                var newMenuItemArray = this.selected_menu_item.filter(function(elem) {
                     return elem.item_id != item_id;
                 });
                 this.selected_menu_item = newMenuItemArray;
@@ -278,7 +278,7 @@ var app = new Vue({
         // this function for bind order sub-total
         BindOrderSubTotal() {
             var subTotal = 0.00;
-            $.each(this.selected_menu_item, function (key, value) {
+            $.each(this.selected_menu_item, function(key, value) {
                 subTotal += parseFloat(parseFloat(value.price) * parseFloat(value.quantity))
             });
             this.subTotal = parseFloat(subTotal);
@@ -290,10 +290,10 @@ var app = new Vue({
             vm.isLoading = true;
             if (this.coupon_code != '') {
                 axios.post(apply_coupon_indexUrl, {
-                    coupon_code: this.coupon_code,
-                    view_id: this.store_id
-                })
-                    .then(function (response) {
+                        coupon_code: this.coupon_code,
+                        view_id: this.store_id
+                    })
+                    .then(function(response) {
                         // console.log('main call waiter response-----------')
                         // console.log(response.data.payload)
                         $('#coupon_msg_div').css("display", "block")
@@ -313,7 +313,7 @@ var app = new Vue({
                             vm.discount = parseFloat(tempDiscount)
                         }
                     })
-                    .catch(function (error) {
+                    .catch(function(error) {
                         vm.loaded = false;
                         vm.isLoading = false;
                     });
@@ -323,20 +323,20 @@ var app = new Vue({
         },
         // this function for delete item from cart
         removeItem(item_id) {
-            var newMenuItemIdArray = this.selectedItemId.filter(function (e) {
+            var newMenuItemIdArray = this.selectedItemId.filter(function(e) {
                 return e != item_id;
             });
 
             this.selectedItemId = newMenuItemIdArray;
             localStorage.setItem('selectedItemId', JSON.stringify(this.selectedItemId));
 
-            var newMenuItemArray = this.selected_menu_item.filter(function (elem) {
+            var newMenuItemArray = this.selected_menu_item.filter(function(elem) {
                 return elem.item_id != item_id;
             });
             this.selected_menu_item = newMenuItemArray;
             localStorage.setItem('selectedItem', JSON.stringify(this.selected_menu_item))
         },
-        checkForm: function (e) {
+        checkForm: function(e) {
             this.errors = [];
             if (!this.name) this.errors.push({ type: 'name', msg: "Please enter Your Name." });
             if (!this.phone) this.errors.push({ type: 'phone', msg: "Please enter Your mobile number." });
@@ -353,7 +353,7 @@ var app = new Vue({
             this.errors = [];
             this.name = null
             this.phone = null
-            if(this.table_no > 0){
+            if (this.table_no > 0) {
                 this.order_type = '1'
             }
             // this.order_type = null
@@ -364,20 +364,20 @@ var app = new Vue({
             this.coupon_code = null
             $('#coupon_msg_div').css("display", "none")
         },
-        get_orders: function () {
+        get_orders: function() {
             let vm = this;
             vm.isLoading = true;
             // console.log('call get_order function-----end', this.customer_phone);
             // console.log(get_order_indexUrl)
             axios.post(get_order_indexUrl, {
-                customer_phone: this.customer_phone
-            })
-                .then(function (response) {
+                    customer_phone: this.customer_phone
+                })
+                .then(function(response) {
                     // console.log('main get order response-----------')
                     // console.log(response.data.payload.data)
                     vm.customer_orders = response.data.payload.data;
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     vm.loaded = false;
                     vm.isLoading = false;
                 });
@@ -395,19 +395,19 @@ var app = new Vue({
             // console.log('call waiter function-----end', order_id);
             // console.log(order_call_waiter_indexUrl)
             axios.post(order_call_waiter_indexUrl, {
-                order_id: order_id
-            })
-                .then(function (response) {
+                    order_id: order_id
+                })
+                .then(function(response) {
                     // console.log('main call waiter response-----------')
                     // console.log(response.data)
                     $('#' + order_id).css("display", "none")
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     vm.loaded = false;
                     vm.isLoading = false;
                 });
         },
-        checkWaiterCallForm: function (e) {
+        checkWaiterCallForm: function(e) {
 
             // if (this.customer_name && this.customer_mobile && this.customer_table_number) return true;
             this.errors = [];
@@ -422,24 +422,24 @@ var app = new Vue({
                 let vm = this;
                 vm.isLoading = true;
                 axios.post(order_call_waiter_indexUrl, {
-                    customer_name: this.customer_name,
-                    customer_phone: this.customer_mobile,
-                    store_id: this.store_id,
-                    table_name: this.table_no,
-                    comment: this.customer_comment
-                })
-                    .then(function (response) {
+                        customer_name: this.customer_name,
+                        customer_phone: this.customer_mobile,
+                        store_id: this.store_id,
+                        table_name: this.table_no,
+                        comment: this.customer_comment
+                    })
+                    .then(function(response) {
                         // console.log('main call waiter response-----------')
                         // console.log(response.data)
                         $('#call-to-waiter').modal('hide');
                     })
-                    .catch(function (error) {
+                    .catch(function(error) {
                         vm.loaded = false;
                         vm.isLoading = false;
                     });
             }
         },
-        check: function (e) {
+        check: function(e) {
             console.log(this.is_COD)
         },
         placeOrder() {
@@ -447,7 +447,7 @@ var app = new Vue({
             vm.isLoading = true;
             var paymentMethod = (this.is_COD == true) ? 'CASH' : ''
             var cart = []
-            $.each(this.selected_menu_item, function (key, value) {
+            $.each(this.selected_menu_item, function(key, value) {
                 var tempCartObj = {
                     addon: null,
                     count: value.quantity,
@@ -459,26 +459,26 @@ var app = new Vue({
             });
             var totalAmount = parseFloat(this.subTotal) + parseFloat(this.storeData.service_charge) + parseFloat(this.storeData.tax) - parseFloat(this.discount)
             axios.post(place_order_indexUrl, {
-                cart: cart,
-                comments: this.comments,
-                customer_name: this.name,
-                customer_phone: this.phone,
-                dob_customer: null,
-                order_type: this.order_type,
-                payment_status: 1,
-                payment_type: paymentMethod,
-                room_number: null,
-                store_charge: this.storeData.service_charge,
-                store_id: this.store_id,
-                sub_total: this.subTotal,
-                table_no: this.table_no,
-                tax: this.storeData.tax,
-                total: totalAmount,
-                coupon_name: this.coupon_code,
-                discount: this.discount,
-                vehicle_no: this.customer_vehicle_no
-            })
-                .then(function (response) {
+                    cart: cart,
+                    comments: this.comments,
+                    customer_name: this.name,
+                    customer_phone: this.phone,
+                    dob_customer: null,
+                    order_type: this.order_type,
+                    payment_status: 1,
+                    payment_type: paymentMethod,
+                    room_number: null,
+                    store_charge: this.storeData.service_charge,
+                    store_id: this.store_id,
+                    sub_total: this.subTotal,
+                    table_no: this.table_no,
+                    tax: this.storeData.tax,
+                    total: totalAmount,
+                    coupon_name: this.coupon_code,
+                    discount: this.discount,
+                    vehicle_no: this.customer_vehicle_no
+                })
+                .then(function(response) {
                     if (response.data.success == true) {
                         $('#place-order').modal('show');
                         vm.place_order_detail = response.data.payload.new_order;
@@ -490,24 +490,24 @@ var app = new Vue({
                     }
 
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     vm.loaded = false;
                     vm.isLoading = false;
                 });
         },
-        check_order_status: function () {
+        check_order_status: function() {
             $('#cart').modal('hide');
             $('#payment-method').modal('hide');
             $('#my-order').modal('show');
             let vm = this;
             vm.isLoading = true;
             axios.post(get_order_indexUrl, {
-                customer_phone: this.customer_phone
-            })
-                .then(function (response) {
+                    customer_phone: this.customer_phone
+                })
+                .then(function(response) {
                     vm.customer_orders = response.data.payload.data;
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     vm.loaded = false;
                     vm.isLoading = false;
                 });
@@ -525,46 +525,46 @@ var app = new Vue({
     },
     directives: {
         carousel: {
-            inserted: function (el) {
+            inserted: function(el) {
                 // console.log('asdasdasdasd')
                 $(el).owlCarousel({
-                    loop: false,
-                    margin: 10,
-                    nav: false,
-                    responsive: {
-                        0: {
-                            items: 2
-                        },
-                        600: {
-                            items: 6
-                        },
-                        1000: {
-                            items: 8
+                        loop: true,
+                        margin: 10,
+                        nav: false,
+                        responsive: {
+                            0: {
+                                items: 2
+                            },
+                            600: {
+                                items: 6
+                            },
+                            1000: {
+                                items: 8
+                            }
                         }
-                    }
-                }).trigger('to.owl.carousel', app.items.length)
-                // console.log('slider')
+                    }).trigger('to.owl.carousel', app.items.length)
+                    // console.log('slider')
             },
         },
         carousel2: {
-            inserted: function (el) {
+            inserted: function(el) {
                 $(el).owlCarousel({
-                    loop: false,
-                    margin: 10,
-                    nav: false,
-                    responsive: {
-                        0: {
-                            items: 2
-                        },
-                        600: {
-                            items: 6
-                        },
-                        1000: {
-                            items: 6
+                        loop: false,
+                        margin: 10,
+                        nav: false,
+                        responsive: {
+                            0: {
+                                items: 2
+                            },
+                            600: {
+                                items: 6
+                            },
+                            1000: {
+                                items: 6
+                            }
                         }
-                    }
-                }).trigger('to.owl.carousel', app.RecommendedProduct.length)
-                // console.log("crousel inserted")
+                    }).trigger('to.owl.carousel', app.RecommendedProduct.length)
+                    // console.log("crousel inserted")
             },
         }
     }

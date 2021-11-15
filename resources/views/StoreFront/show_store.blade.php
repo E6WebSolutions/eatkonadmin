@@ -5,7 +5,26 @@
         display: none;
     }
 </style>
-
+<div class="page-loader">
+    <div class="load-i">
+        <div id="cooking">
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div id="area">
+                <div id="sides">
+                    <div id="pan"></div>
+                    <div id="handle"></div>
+                </div>
+                <div id="pancake">
+                    <div id="pastry"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <header class="custom-header" id="custom-header">
     <div class="container">
         <div class="location-header">
@@ -36,6 +55,7 @@
         </div>
     </div>
 </header>
+
 <div class="search-container">
     <div class="container">
         <div class="search-result-header py-3">

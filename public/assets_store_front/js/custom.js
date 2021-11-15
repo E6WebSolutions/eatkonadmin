@@ -1,25 +1,30 @@
-$(document).ready(function () {
+$(document).ready(function() {
     //add on 13-11-2021
     // $('.owl-carousel')[0].slick.refresh()
     //end
 
-    $(document).on('click', '.item-added', function () {
+    $(document).on('click', '.item-added', function() {
         $('.item-add').addClass('item-added-popup');
     });
-    $(document).on('click', '.item-close-btn', function () {
+    $(document).on('click', '.item-close-btn', function() {
         $('.item-add').removeClass('item-added-popup');
     });
 
+    $(window).on('load', function() {
+        setTimeout(function() { // allowing 3 secs to fade out loader
+            $('.page-loader').fadeOut('slow');
+        }, 2000);
+    });
 
     /*====================== js for sticky and mobile menu ====================== */
     var min_height = $(window).height() - ($(".custom-header").height() + $(".custom-footer").height());
     $(".main_page").css('min-height', min_height + 'px');
-    $(window).resize(function () {
+    $(window).resize(function() {
         var min_height = $(window).height() - ($(".custom-header").height() + $(".custom-footer").height());
         $(".main_page").css('min-height', min_height + 'px');
     });
 
-    $(window).scroll(function () {
+    $(window).scroll(function() {
         var navHeight = $('#custom-header').height();
         var sticky = $('#custom-header');
         if ($(window).scrollTop() > 0) {
@@ -30,7 +35,7 @@ $(document).ready(function () {
             $('#dashboard-page').css('padding-top', 0);
         }
     });
-    $('.jb_front_nav_close button').on('click', function () {
+    $('.jb_front_nav_close button').on('click', function() {
         $('.navbar-collapse').collapse('hide');
     });
     /*====================== js for sticky and mobile menu ====================== */
@@ -38,7 +43,7 @@ $(document).ready(function () {
     /*====================== js for scrollTop ====================== */
     var btn = $('#button');
 
-    $(window).scroll(function () {
+    $(window).scroll(function() {
         if ($(window).scrollTop() > 500) {
             btn.addClass('show');
         } else {
@@ -46,7 +51,7 @@ $(document).ready(function () {
         }
     });
 
-    btn.on('click', function (e) {
+    btn.on('click', function(e) {
         e.preventDefault();
         $('html, body').animate({ scrollTop: 0 }, '500');
     });
@@ -105,10 +110,10 @@ $(document).ready(function () {
     // });
 
     $('#qty_input').prop('disabled', true);
-    $('#plus-btn').click(function () {
+    $('#plus-btn').click(function() {
         $('#qty_input').val(parseInt($('#qty_input').val()) + 1);
     });
-    $('#minus-btn').click(function () {
+    $('#minus-btn').click(function() {
         $('#qty_input').val(parseInt($('#qty_input').val()) - 1);
         if ($('#qty_input').val() == 0) {
             $('#qty_input').val(1);
@@ -156,7 +161,7 @@ $(document).ready(function () {
 
     /*====================== custom video ====================== */
     // video icon poster frame click event
-    $(document).on('click', '.js-videoPoster', function (ev) {
+    $(document).on('click', '.js-videoPoster', function(ev) {
         ev.preventDefault();
         var $poster = $(this);
         var $wrapper = $poster.closest('.js-videoWrapper');
@@ -190,5 +195,4 @@ $(document).ready(function () {
     }
     /*====================== custom video ====================== */
 
-});/*====================== all js end ====================== */
-
+}); /*====================== all js end ====================== */
