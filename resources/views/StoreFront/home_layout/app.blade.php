@@ -4,7 +4,18 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Restaurant - Home</title>
+    <title>{{$account_info != NULL ? $account_info->application_name:"Eatkon"}}</title>
+    <!-- ================= Favicon ================== -->
+    <!-- Standard -->
+    <link rel="shortcut icon" href="{{asset($account_info != NULL ? $account_info->application_logo:"http://placehold.it/144.png/000/fff")}}">
+    <!-- Retina iPad Touch Icon-->
+    <link rel="apple-touch-icon" sizes="144x144" href="{{asset($account_info != NULL ? $account_info->application_logo:"http://placehold.it/144.png/000/fff")}}">
+    <!-- Retina iPhone Touch Icon-->
+    <link rel="apple-touch-icon" sizes="114x114" href="{{asset($account_info != NULL ? $account_info->application_logo:"http://placehold.it/144.png/000/fff")}}">
+    <!-- Standard iPad Touch Icon-->
+    <link rel="apple-touch-icon" sizes="72x72" href="{{asset($account_info != NULL ? $account_info->application_logo:"http://placehold.it/144.png/000/fff")}}">
+    <!-- Standard iPhone Touch Icon-->
+    <link rel="apple-touch-icon" sizes="57x57" href="{{asset($account_info != NULL ? $account_info->application_logo:"http://placehold.it/144.png/000/fff")}}">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="x-ua-compatible" content="IE=10">
