@@ -107,7 +107,7 @@
                                             <h4 class="text-hidden font-small">@{{ item.name }}</h4>
                                         </div>
                                     </div>
-                                    <price>Rs. @{{ item.price }}</price>
+                                    <price>@{{ storeData.currency_symbol }} @{{ item.price }}</price>
 
                                 </div>
                             </a>
@@ -135,7 +135,7 @@
                                                     <div class="row align-items-center">
                                                         <div class="col-8">
                                                             <div class="item-price">
-                                                                <price>Rs. @{{ menuItem.price}}</price>
+                                                                <price>@{{ storeData.currency_symbol }} @{{ menuItem.price}}</price>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -244,7 +244,7 @@
                                             <div class="row align-items-center">
                                                 <div class="col-8">
                                                     <div class="item-price">
-                                                        <price>Rs. @{{ item.price }}</price>
+                                                        <price>@{{ storeData.currency_symbol }} @{{ item.price }}</price>
                                                     </div>
                                                 </div>
                                             </div>
@@ -297,7 +297,7 @@
                 <div class="cart-item p-3 mt-3">
                     <h5 class="mb-0">Small</h5>
                     <div class="flex-content d-flex align-items-center">
-                        <price>Rs. 80.00</price>
+                        <price>@{{ storeData.currency_symbol }} 80.00</price>
                         <div class="input-group mb-0 quantity-r d-flex align-items-center ml-3">
                             <div class="input-group-prepend">
                                 <button class="btn btn-dark btn-sm qun-btn" id="minus-btn"><i class="fa fa-minus"></i></button>
@@ -312,7 +312,7 @@
                 <div class="cart-item p-3 mt-3">
                     <h5 class="mb-0">Large</h5>
                     <div class="flex-content d-flex align-items-center">
-                        <price>Rs. 80.00</price>
+                        <price>@{{ storeData.currency_symbol }} 80.00</price>
                         <div class="input-group mb-0 quantity-r d-flex align-items-center ml-3">
                             <div class="input-group-prepend">
                                 <button class="btn btn-dark btn-sm qun-btn" id="minus-btn"><i class="fa fa-minus"></i></button>
@@ -364,7 +364,7 @@
                     </div>
                     <div class="mrp-detail">
                         <p class="font-semi">MRP : <b class="font-weight-bold">
-                                <price>Rs. @{{ productDetail.price }}</price>
+                                <price>@{{ storeData.currency_symbol }} @{{ productDetail.price }}</price>
                             </b></p>
                     </div>
                     <div class="cook-time my-3">
@@ -418,7 +418,7 @@
                                             <div class="row align-items-center">
                                                 <div class="col-8">
                                                     <div class="item-price">
-                                                        <price>Rs. @{{ menuItem.price}}</price>
+                                                        <price>@{{ storeData.currency_symbol }} @{{ menuItem.price}}</price>
                                                     </div>
                                                 </div>
                                             </div>
@@ -504,7 +504,7 @@
                     </div>
                     <div class="mrp-detail">
                         <p class="font-semi">MRP : <b class="font-weight-bold">
-                                <price>Rs. @{{ productDetail.price }}</price>
+                                <price>@{{ storeData.currency_symbol }} @{{ productDetail.price }}</price>
                             </b></p>
                     </div>
                     <div class="cook-time my-3">
@@ -558,7 +558,7 @@
                                             <div class="row align-items-center">
                                                 <div class="col-8">
                                                     <div class="item-price">
-                                                        <price>Rs. @{{ menuItem.price}}</price>
+                                                        <price>@{{ storeData.currency_symbol }} @{{ menuItem.price}}</price>
                                                     </div>
                                                 </div>
                                             </div>
@@ -653,7 +653,7 @@
                                             <button class="btn btn-dark btn-sm qun-btn" id="plus-btn" @click="increaseQuantity(menuItem.item_id)"><i class="fa fa-plus"></i></button>
                                         </div>
                                     </div>
-                                    <div class="text-black ml-2 item-price">Rs. @{{ menuItem.price}}</div>
+                                    <div class="text-black ml-2 item-price">@{{ storeData.currency_symbol }} @{{ menuItem.price}}</div>
                                 </div>
                             </div>
                         </div>
@@ -733,7 +733,7 @@
                                     <p>Subtotal</p>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <price class="text-black">Rs. <span v-bind:text="BindOrderSubTotal()">@{{ subTotal }}</span></price>
+                                    <price class="text-black">@{{ storeData.currency_symbol }} <span v-bind:text="BindOrderSubTotal()">@{{ subTotal }}</span></price>
                                 </div>
                             </div>
                         </div>
@@ -743,7 +743,7 @@
                                     <p>Apply Coupon</p>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <price>- Rs. @{{ discount }}</price>
+                                    <price>- @{{ storeData.currency_symbol }} @{{ discount }}</price>
                                 </div>
                             </div>
                         </div>
@@ -753,7 +753,7 @@
                                     <p>Service Charge</p>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <price>Rs. @{{ parseFloat(storeData.service_charge) }}</price>
+                                    <price>@{{ storeData.currency_symbol }} @{{ parseFloat(storeData.service_charge) }}</price>
                                 </div>
                             </div>
                         </div>
@@ -763,7 +763,7 @@
                                     <p>Tax %</p>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <price>Rs. @{{ parseFloat(storeData.tax) }}</price>
+                                    <price>@{{ storeData.currency_symbol }} @{{ parseFloat(storeData.tax) }}</price>
                                 </div>
                             </div>
                         </div>
@@ -774,7 +774,7 @@
                         <div class="col-12 p-0 pay-now">
                             <a href="javascript:void(0)" @click="checkForm()">
                                 <div class="more text-center text-md-left text-lg-left total-cost">
-                                    <h6 class="m-0">Total Cost: <price>Rs. @{{ parseFloat(subTotal) + parseFloat(storeData . service_charge) + parseFloat(storeData . tax) - parseFloat(discount) }}</span></price>
+                                    <h6 class="m-0">Total Cost: <price>@{{ storeData.currency_symbol }} @{{ parseFloat(subTotal) + parseFloat(storeData . service_charge) + parseFloat(storeData . tax) - parseFloat(discount) }}</span></price>
                                     </h6>
                                     <p class="m-0">Confirm your order.</p>
                                 </div>
@@ -860,7 +860,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="text-right"><b>
-                                        <price><b>Rs. @{{ customer_order.total }}</b></price>
+                                        <price><b>@{{ storeData.currency_symbol }} @{{ customer_order.total }}</b></price>
                                     </b>
                                 </div>
                             </div>
@@ -1130,11 +1130,11 @@
                             </div>
                             <div class="col-6">
                                 <div class="text-right"><b>
-                                        <price>Rs. @{{ place_order_detail.sub_total }}</price><br>
-                                        <price v-if="place_order_detail.discount !== null ">- Rs. @{{ place_order_detail.discount }}</price><br v-if="place_order_detail.discount !== null">
-                                        <price>Rs. @{{ place_order_detail.store_charge }}</price><br>
-                                        <price>Rs. @{{ place_order_detail.tax }}</price><br>
-                                        <price><b>Rs. @{{ place_order_detail.total }}</b></price>
+                                        <price>@{{ storeData.currency_symbol }} @{{ place_order_detail.sub_total }}</price><br>
+                                        <price v-if="place_order_detail.discount !== null ">- @{{ storeData.currency_symbol }} @{{ place_order_detail.discount }}</price><br v-if="place_order_detail.discount !== null">
+                                        <price>@{{ storeData.currency_symbol }} @{{ place_order_detail.store_charge }}</price><br>
+                                        <price>@{{ storeData.currency_symbol }} @{{ place_order_detail.tax }}</price><br>
+                                        <price><b>@{{ storeData.currency_symbol }} @{{ place_order_detail.total }}</b></price>
                                     </b>
                                 </div>
                             </div>
